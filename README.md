@@ -8,4 +8,7 @@
 
 
 Python 3.8+
-包管理器准备用 https://github.com/pdm-project/pdm 或者 https://github.com/astral-sh/uv
+包管理器用 https://github.com/pdm-project/pdm  
+
+需要先安装pdm 可以brew curl 也可以pip
+pdm==2.20.1
