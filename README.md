@@ -12,3 +12,15 @@ Python 3.8+
 
 需要先安装pdm 可以brew curl 也可以pip
 pdm==2.20.1
+
+# formatter
+```shell
+
+black --line-length 120 . && isort --profile black . 
+```
+
+# run
+
+```shell
+cp .env.example aicryptbot/.env
+```
