@@ -11,6 +11,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(level
 
 from cex.binance_cex import Binance
 
+
 if __name__ == "__main__":
-    b = Binance()
-    print(b)
+    b = Binance("BTCUSDT", "15m")
+    b.ma()
+    # b = Binance("BTCUSDT", "1h")
+    # b.kdj()

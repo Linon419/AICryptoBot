@@ -36,13 +36,8 @@ class CEX(ABC):
         pass
 
     @abstractmethod
-    def spot(self):
+    def ma(self):
         # 现货
-        pass
-
-    @abstractmethod
-    def futures(self):
-        # U本位合约
         pass
 
     def __str__(self):

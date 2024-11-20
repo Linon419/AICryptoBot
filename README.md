@@ -20,7 +20,9 @@ black --line-length 120 . && isort --profile black .
 ```
 
 # run
-
+$ brew install ta-lib
 ```shell
 cp .env.example aicryptbot/.env
 ```
+
+https://taapi.io/
