@@ -2,25 +2,32 @@
 # coding: utf-8
 # AICryptoBot - binance_cex.py
 
+import json
+import logging
 import os
-
-from binance.spot import Spot
-from binance.um_futures import UMFutures
-from cex import CEX
-
-import random
 
 import pandas as pd
 import talib
+from binance.um_futures import UMFutures
 
-import logging
+from cex import CEX
+
+if os.getenv("ENV", "dev") != "dev":
+    logging.warning("⚠️⚠️⚠️生产环境⚠️⚠️⚠️️")
 
 
 class BinanceAPI(CEX):
 
     def __init__(self, symbol: str, interval: str):
-        api_key, api_secret = os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_API_SECRET")
-        self.__um_client = UMFutures()
+        suffix = ""
+        if os.getenv("ENV", "dev") == "dev":
+            suffix = "_TEST"
+        api_key, api_secret, base_url = (
+            os.getenv(f"BINANCE_API_KEY{suffix}"),
+            os.getenv(f"BINANCE_API_SECRET{suffix}"),
+            os.getenv(f"BINANCE_BASE_URL{suffix}"),
+        )
+        self.__um_client = UMFutures(key=api_key, secret=api_secret, base_url=base_url)
         self.df = pd.DataFrame()
         self.__symbol = symbol
         self.__interval = interval
@@ -28,7 +35,7 @@ class BinanceAPI(CEX):
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=200)
+        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=150)
         columns = [
             "open_time",
             "open",
@@ -110,7 +117,7 @@ class BinanceAPI(CEX):
         self.df["ema99"] = ema99
 
     def get_all_indicators(self):
-        logging.info("Gathering %s indicators....", self.__interval)
+        logging.info("获取 %s %s的技术指标中....", self.__symbol, self.__interval)
         self._boll()
         self._rsi()
         self._macd()
@@ -123,3 +130,41 @@ class BinanceAPI(CEX):
 
     def __str__(self):
         return "binance"
+
+    def get_usdt_balance(self):
+        assets = self.__um_client.balance()
+        print(json.dumps(assets, indent=4))
+        for asset in assets:
+            if asset["asset"] == "USDT":
+                return asset
+
+    def new_order(self, side, usdt, leverage=5):
+        price = self.get_price()
+        # 需要处理一下精度问题
+        quantity = round(usdt / price, 3)
+        logging.info("%s：%s，数量：%s", self.__symbol, "做空" if side == "SELL" else "做多", quantity)
+        self.__um_client.change_leverage(symbol=self.__symbol, leverage=leverage)
+        self.__um_client.new_order(symbol=self.__symbol, side=side, quantity=quantity, type="MARKET")
+
+    def get_holdings(self) -> list:
+        data = self.__um_client.get_position_risk(symbol=self.__symbol)
+        if len(data) != 0:
+            logging.info("持仓信息：%s", data)
+        return data
+
+    def close_holdings(self, quantity=None):
+        position = self.get_holdings()
+        position_amount = float(position[0]["positionAmt"])
+        if quantity is None:
+            quantity = abs(position_amount)
+        # positionAmt>0 做多，positionAmt<0 做空
+        if position_amount > 0:
+            logging.info("做多平仓，数量：%s", quantity)
+            self.__um_client.new_order(symbol=self.__symbol, side="SELL", closePosition=True, type="MARKET")
+        else:
+            logging.info("做空平仓，数量：%s", quantity)
+            self.__um_client.new_order(symbol=self.__symbol, side="BUY", closePosition=True, type="MARKET")
+
+    def get_price(self) -> float:
+        # 1 个币的价格，单位 USDT
+        return float(self.__um_client.ticker_price(symbol=self.__symbol)["price"])

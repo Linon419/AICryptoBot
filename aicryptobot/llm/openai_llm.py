@@ -3,12 +3,14 @@
 
 # AICryptoBot - openai_llm.py
 
+import json
+import logging
 import os
 
 from openai import OpenAI
-import logging
-import json
+
 from llm import LLM
+from llm.definition import TradingAction
 
 
 class GPT(LLM):
@@ -17,26 +19,13 @@ class GPT(LLM):
         self.client = OpenAI(base_url=base_url, api_key=api_key)
         self.model = model
 
-    def send(self, data_1m, data_5m):
-        logging.info("Sending data to OpenAI...")
-        completion = self.client.chat.completions.create(
-            model="gpt-4o",
-            temperature=0.1,
-            messages=[
-                {
-                    "role": "system",
-                    "content": self.system_prompt,
-                },
-                {
-                    "role": "user",
-                    "content": data_1m,
-                },
-                {
-                    "role": "user",
-                    "content": data_5m,
-                },
-            ],
-        )
-
-        content = completion.choices[0].message.content
-        print(content)
+    def send(self, indicators: list, current: str) -> TradingAction:
+        logging.info("发送数据给 OpenAI %s", self.model)
+        messages = [{"role": "system", "content": self.system_prompt}]
+        for indicator in indicators:
+            messages.append({"role": "system", "content": indicator})
+        if current:
+            logging.info("已有持仓，添加额外信息中...")
+            messages.append({"role": "user", "content": f"My current holdings: {current}"})
+        completion = self.client.chat.completions.create(model="gpt-4o", temperature=0.1, messages=messages)
+        return json.loads(completion.choices[0].message.content)
