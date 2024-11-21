@@ -11,31 +11,31 @@ class CEX(ABC):
         pass
 
     @abstractmethod
-    def __macd(self):
+    def _macd(self):
         pass
 
     @abstractmethod
-    def __rsi(self):
+    def _rsi(self):
         pass
 
     @abstractmethod
-    def __boll(self):
+    def _boll(self):
         pass
 
     @abstractmethod
-    def __volume(self):
+    def _volume(self):
         pass
 
     @abstractmethod
-    def __kdj(self):
+    def _kdj(self):
         pass
 
     @abstractmethod
-    def __candlestick(self):
+    def _candlestick(self):
         pass
 
     @abstractmethod
-    def __ma(self):
+    def _ma(self):
         pass
 
     def __str__(self):
