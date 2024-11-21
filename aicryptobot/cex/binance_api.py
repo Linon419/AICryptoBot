@@ -26,7 +26,7 @@ class BinanceAPI(CEX):
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=1000)
+        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=200)
         columns = [
             "open_time",
             "open",
@@ -35,23 +35,26 @@ class BinanceAPI(CEX):
             "close",
             "volume",
             "close_time",
-            "quote_volume",
-            "trades",
-            "taker_buy_volume",
-            "taker_buy_quote_volume",
+            "transaction_value",
+            "transaction_count",
+            "active_buy_volume",
+            "active_buy_value",
             "ignore",
         ]
 
         self.df = pd.DataFrame(candles, columns=columns)
         numeric_columns = [
+            "open_time",
             "open",
             "high",
             "low",
             "close",
             "volume",
-            "quote_volume",
-            "taker_buy_volume",
-            "taker_buy_quote_volume",
+            "close_time",
+            "transaction_value",
+            "transaction_count",
+            "active_buy_volume",
+            "active_buy_value",
         ]
         self.df[numeric_columns] = self.df[numeric_columns].apply(pd.to_numeric)
         self.df["open_time"] = pd.to_datetime(self.df["open_time"], unit="ms")
@@ -63,57 +66,57 @@ class BinanceAPI(CEX):
         self.df["upperband"] = upperband
         self.df["middleband"] = middleband
         self.df["lowerband"] = lowerband
-        important_columns = self.df[["open_time", "upperband", "middleband", "lowerband"]]
-        print(important_columns.tail(1))
 
     def _rsi(self):
         rsi6 = talib.RSI(self.df["close"], timeperiod=6)
         rsi12 = talib.RSI(self.df["close"], timeperiod=12)
         rsi24 = talib.RSI(self.df["close"], timeperiod=24)
-        print(rsi6.tail(1).iloc[0], rsi12.tail(1).iloc[0], rsi24.tail(1).iloc[0])
+        self.df["rsi6"] = rsi6
+        self.df["rsi12"] = rsi12
+        self.df["rsi24"] = rsi24
 
     def _macd(self):
         dif, dea, macd = talib.MACD(self.df["close"], fastperiod=12, slowperiod=26, signalperiod=9)
-        print(dif.tail(1).iloc[0], dea.tail(1).iloc[0], macd.tail(1).iloc[0])
+        self.df["dif"] = dif
+        self.df["dea"] = dea
+        self.df["macd"] = macd
 
     def _volume(self):
-        vol = self.df["volume"]
-        ma5 = self.df["volume"].rolling(window=5).mean()
-        ma10 = self.df["volume"].rolling(window=10).mean()
-        print(vol.tail(1).iloc[0], ma5.tail(1).iloc[0], ma10.tail(1).iloc[0])
-
-    def _kdj(self):
-        # 不准所以最好别用！
-        k, d = talib.STOCH(
-            self.df["high"],
-            self.df["low"],
-            self.df["close"],
-            fastk_period=14,
-            slowk_period=3,
-            slowk_matype=0,
-            slowd_period=3,
-            slowd_matype=0,
-        )
-
-        # 计算 J 值
-        j = 3 * k - 2 * d
-
-        print(k.tail(1).iloc[0], d.tail(1).iloc[0], j.tail(1).iloc[0])
+        pass
+        # 似乎不是很重要
+        # vol = self.df["volume"]
+        # ma5 = self.df["volume"].rolling(window=5).mean()
+        # ma10 = self.df["volume"].rolling(window=10).mean()
+        # self.df["vol-ma5"] = ma5
+        # self.df["vol-ma10"] = ma10
 
     def _ma(self):
-        sma7 = talib.SMA(self.df["close"], timeperiod=7)
-        sma25 = talib.SMA(self.df["close"], timeperiod=25)
-        sma99 = talib.SMA(self.df["close"], timeperiod=99)
+        # sma7 = talib.SMA(self.df["close"], timeperiod=7)
+        # sma25 = talib.SMA(self.df["close"], timeperiod=25)
+        # sma99 = talib.SMA(self.df["close"], timeperiod=99)
 
         ema7 = talib.EMA(self.df["close"], timeperiod=7)
         ema25 = talib.EMA(self.df["close"], timeperiod=25)
         ema99 = talib.EMA(self.df["close"], timeperiod=99)
 
-        print(sma7.tail(1).iloc[0], sma25.tail(1).iloc[0], sma99.tail(1).iloc[0])
-        print(ema7.tail(1).iloc[0], ema25.tail(1).iloc[0], ema99.tail(1).iloc[0])
+        # self.df["sma7"] = sma7
+        # self.df["sma25"] = sma25
+        # self.df["sma99"] = sma99
 
-    def get_all_indicators():
-        pass
+        self.df["ema7"] = ema7
+        self.df["ema25"] = ema25
+        self.df["ema99"] = ema99
+
+    def get_all_indicators(self):
+        self._boll()
+        self._rsi()
+        self._macd()
+        self._volume()
+        self._ma()
+        self.df.drop(columns=["ignore", "close_time"], inplace=True)
+        self.df.dropna(inplace=True)
+
+        return self.df.to_json(orient="records", date_format="iso")
 
     def __str__(self):
         return "binance"

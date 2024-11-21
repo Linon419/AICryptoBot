@@ -27,10 +27,6 @@ class CEX(ABC):
         pass
 
     @abstractmethod
-    def _kdj(self):
-        pass
-
-    @abstractmethod
     def _candlestick(self):
         pass
 

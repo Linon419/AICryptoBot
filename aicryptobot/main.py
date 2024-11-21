@@ -13,8 +13,9 @@ from aicryptobot.cex.binance_api import BinanceAPI
 
 
 if __name__ == "__main__":
-    b = BinanceAPI("BTCUSDT", "15m")
-    b.get_all_indicators()
+    b = BinanceAPI("BTCUSDT", "5m")
+    data = b.get_all_indicators()
+    print(data)
 
     # b = Binance("BTCUSDT", "1h")
     # b.kdj()
