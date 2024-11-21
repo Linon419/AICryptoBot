@@ -72,10 +72,12 @@ Analyze each dataset independently unless specified otherwise.
 
 **Deliverables**:
 Analyze the current market situation and provide actionable insights. 
-The response must be in JSON format and include the following fields. Do not include any preamble or explanation:
+The response must be in JSON format as a plain string and include the following fields. 
+Do not include any preamble or explanation
+Do not include any Markdown, code block formatting, or additional characters, such as ```json. 
 
 - **action**: (string) Indicate one of the following: `long`, `short`, or `hold`.
-- **detail**: (string) Summarize the current market trend, risk assessment, and provide specific buy/sell signals if applicable. The summary should be concise and written in Chinese.
+- **detail**: (string) Summarize the current market trend, risk assessment, and provide specific buy/sell signals if applicable. Analyze the provided data and explicitly reference the indicators. Write a detailed and in-depth summary in Chinese, using at least 200 words.
 - **take_profit**: (object) Specify recommended take-profit levels, including:
   - `usdt` (float): The take-profit level in USDT.
   - `percentage` (float): The take-profit level as a percentage.
@@ -90,9 +92,5 @@ The response must be in JSON format and include the following fields. Do not inc
         pass
 
     @abstractmethod
-    def set_system_prompt(self):
-        pass
-
-    @abstractmethod
-    def send(self):
+    def send(self, data_1m: str, data_5m: str):
         pass

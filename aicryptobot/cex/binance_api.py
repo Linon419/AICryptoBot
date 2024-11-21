@@ -13,6 +13,8 @@ import random
 import pandas as pd
 import talib
 
+import logging
+
 
 class BinanceAPI(CEX):
 
@@ -108,6 +110,7 @@ class BinanceAPI(CEX):
         self.df["ema99"] = ema99
 
     def get_all_indicators(self):
+        logging.info("Gathering %s indicators....", self.__interval)
         self._boll()
         self._rsi()
         self._macd()
