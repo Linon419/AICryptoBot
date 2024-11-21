@@ -7,13 +7,15 @@ import logging
 from dotenv import load_dotenv
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
-from cex.binance_cex import Binance
+from aicryptobot.cex.binance_indicator import BinanceIndicator
 
 
 if __name__ == "__main__":
-    b = Binance("BTCUSDT", "15m")
+    b = BinanceIndicator("BTCUSDT", "15m")
     b.ma()
     # b = Binance("BTCUSDT", "1h")
     # b.kdj()

@@ -14,10 +14,10 @@ import pandas as pd
 import talib
 
 
-class Binance(CEX):
+class BinanceIndicator(CEX):
 
     def __init__(self, symbol: str, interval: str):
-        api_key, api_secret = os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_API_SECRET")
+        api_key, api_secret = os.getenv("BINANCE_API_KEY"), os.getenv(   "BINANCE_API_SECRET"   )
         self.um_client = UMFutures()
         self.df = pd.DataFrame()
         self.__symbol = symbol
@@ -26,7 +26,9 @@ class Binance(CEX):
 
     def candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        candles = self.um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=1000)
+        candles = self.um_client.klines(
+            symbol=self.__symbol, interval=self.__interval, limit=1000
+        )
         columns = [
             "open_time",
             "open",
@@ -59,11 +61,15 @@ class Binance(CEX):
 
     def boll(self):
         # 默认参数是时间周期 20，标准差系数 2
-        upperband, middleband, lowerband = talib.BBANDS(self.df["close"], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
+        upperband, middleband, lowerband = talib.BBANDS(
+            self.df["close"], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0
+        )
         self.df["upperband"] = upperband
         self.df["middleband"] = middleband
         self.df["lowerband"] = lowerband
-        important_columns = self.df[["open_time", "upperband", "middleband", "lowerband"]]
+        important_columns = self.df[
+            ["open_time", "upperband", "middleband", "lowerband"]
+        ]
         print(important_columns.tail(1))
 
     def rsi(self):
@@ -73,7 +79,9 @@ class Binance(CEX):
         print(rsi6.tail(1).iloc[0], rsi12.tail(1).iloc[0], rsi24.tail(1).iloc[0])
 
     def macd(self):
-        dif, dea, macd = talib.MACD(self.df["close"], fastperiod=12, slowperiod=26, signalperiod=9)
+        dif, dea, macd = talib.MACD(
+            self.df["close"], fastperiod=12, slowperiod=26, signalperiod=9
+        )
         print(dif.tail(1).iloc[0], dea.tail(1).iloc[0], macd.tail(1).iloc[0])
 
     def volume(self):
@@ -83,7 +91,7 @@ class Binance(CEX):
         print(vol.tail(1).iloc[0], ma5.tail(1).iloc[0], ma10.tail(1).iloc[0])
 
     def kdj(self):
-        # 不准！
+        # 不准所以最好别用！
         k, d = talib.STOCH(
             self.df["high"],
             self.df["low"],
