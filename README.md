@@ -19,10 +19,15 @@ pdm==2.20.1
 black --line-length 120 . && isort --profile black . 
 ```
 
-# run
+# 安装环境
+## macOS
 $ brew install ta-lib
 ```shell
 cp .env.example aicryptbot/.env
 ```
+
+## Linux
+参考 Dockerfile
+
 
 https://taapi.io/
