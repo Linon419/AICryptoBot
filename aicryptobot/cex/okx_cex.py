@@ -36,22 +36,22 @@ class OKX(CEX):
         self.funding = Funding.FundingAPI(**params)
         self.trade = Trade.TradeAPI(**params)
 
-    def macd(self):
+    def __macd(self):
         pass
 
-    def rsi(self):
+    def __rsi(self):
         pass
 
-    def boll(self):
+    def __boll(self):
         pass
 
-    def volume(self):
+    def __volume(self):
         pass
 
-    def kdj(self):
+    def __kdj(self):
         pass
 
-    def candlestick(self):
+    def __candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
         pass
 

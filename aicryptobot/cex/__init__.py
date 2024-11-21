@@ -11,33 +11,31 @@ class CEX(ABC):
         pass
 
     @abstractmethod
-    def macd(self):
+    def __macd(self):
         pass
 
     @abstractmethod
-    def rsi(self):
+    def __rsi(self):
         pass
 
     @abstractmethod
-    def boll(self):
+    def __boll(self):
         pass
 
     @abstractmethod
-    def volume(self):
+    def __volume(self):
         pass
 
     @abstractmethod
-    def kdj(self):
+    def __kdj(self):
         pass
 
     @abstractmethod
-    def candlestick(self):
-        # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
+    def __candlestick(self):
         pass
 
     @abstractmethod
-    def ma(self):
-        # 现货
+    def __ma(self):
         pass
 
     def __str__(self):

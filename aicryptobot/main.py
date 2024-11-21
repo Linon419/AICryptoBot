@@ -11,11 +11,11 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
-from aicryptobot.cex.binance_indicator import BinanceIndicator
+from aicryptobot.cex.binance_api import BinanceAPI
 
 
 if __name__ == "__main__":
-    b = BinanceIndicator("BTCUSDT", "15m")
-    b.ma()
+    b = BinanceAPI("BTCUSDT", "15m")
+    
     # b = Binance("BTCUSDT", "1h")
     # b.kdj()
