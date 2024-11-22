@@ -5,7 +5,7 @@ description = "Default template for PDM package"
 authors = [
     {name = "Benny", email = "benny.think@gmail.com"},
 ]
-dependencies = ["python-okx==0.3.3", "binance-connector==3.9.0", "python-dotenv>=1.0.1", "black>=24.8.0", "openai>=1.54.5", "anthropic>=0.39.0", "isort>=5.13.2", "requests>=2.32.3", "TA-Lib>=0.5.1", "numpy>=2.0.2", "pandas>=2.2.3", "binance-futures-connector>=4.1.0"]
+dependencies = ["python-okx==0.3.3", "binance-connector==3.9.0", "python-dotenv>=1.0.1", "black>=24.8.0", "openai>=1.54.5", "anthropic>=0.39.0", "isort>=5.13.2", "requests>=2.32.3", "TA-Lib>=0.5.1", "numpy>=2.0.2", "pandas>=2.2.3", "binance-futures-connector>=4.1.0", "pytelegrambotapi>=4.24.0"]
 requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}

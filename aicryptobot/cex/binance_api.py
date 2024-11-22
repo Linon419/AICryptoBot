@@ -18,7 +18,7 @@ if os.getenv("ENV", "dev") != "dev":
 
 class BinanceAPI(CEX):
 
-    def __init__(self, symbol: str, interval: str):
+    def __init__(self, symbol: str = None, interval: str = "15m"):
         suffix = ""
         if os.getenv("ENV", "dev") == "dev":
             suffix = "_TEST"
@@ -31,7 +31,8 @@ class BinanceAPI(CEX):
         self.df = pd.DataFrame()
         self.__symbol = symbol
         self.__interval = interval
-        self._candlestick()
+        if symbol is not None:
+            self._candlestick()
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
@@ -133,7 +134,6 @@ class BinanceAPI(CEX):
 
     def get_usdt_balance(self):
         assets = self.__um_client.balance()
-        print(json.dumps(assets, indent=4))
         for asset in assets:
             if asset["asset"] == "USDT":
                 return asset

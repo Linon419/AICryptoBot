@@ -88,5 +88,5 @@ Do not include any Markdown, code block formatting, or additional characters, su
         pass
 
     @abstractmethod
-    def send(self, indicators: list, current: str):
+    def send(self, symbol: str, indicators: list, current: str):
         pass

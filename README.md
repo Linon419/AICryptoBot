@@ -28,6 +28,4 @@ cp .env.example aicryptbot/.env
 
 ## Linux
 参考 Dockerfile
-
-
-https://taapi.io/
+ 

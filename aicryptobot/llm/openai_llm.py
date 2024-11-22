@@ -19,11 +19,14 @@ class GPT(LLM):
         self.client = OpenAI(base_url=base_url, api_key=api_key)
         self.model = model
 
-    def send(self, indicators: list, current: str) -> TradingAction:
+    def send(self, symbol: str, indicators: list, current: str) -> TradingAction:
         logging.info("发送数据给 OpenAI %s", self.model)
-        messages = [{"role": "system", "content": self.system_prompt}]
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {"role": "user", "content": f"Token to analyze: {symbol}"},
+        ]
         for indicator in indicators:
-            messages.append({"role": "system", "content": indicator})
+            messages.append({"role": "user", "content": indicator})
         if current:
             logging.info("已有持仓，添加额外信息中...")
             messages.append({"role": "user", "content": f"My current holdings: {current}"})

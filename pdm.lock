@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:b054d6ca592957736882e515274c767c782b5e3e752dbffa95fd8dca4b437359"
+content_hash = "sha256:11da5f466c1d60fbb1cdc4dc8c6d784cfa48cf9e49bbd0109f0bc3537bf298dd"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -1166,6 +1166,20 @@ dependencies = [
 files = [
     {file = "pyOpenSSL-24.2.1-py3-none-any.whl", hash = "sha256:967d5719b12b243588573f39b0c677637145c7a1ffedcd495a487e58177fbb8d"},
     {file = "pyopenssl-24.2.1.tar.gz", hash = "sha256:4247f0dbe3748d560dcbb2ff3ea01af0f9a1a001ef5f7c4c647956ed8cbf0e95"},
+]
+
+[[package]]
+name = "pytelegrambotapi"
+version = "4.24.0"
+requires_python = ">=3.9"
+summary = "Python Telegram bot api."
+groups = ["default"]
+dependencies = [
+    "requests",
+]
+files = [
+    {file = "pytelegrambotapi-4.24.0-py3-none-any.whl", hash = "sha256:2d62dc1fb03e65244b6f84d1f21bb235856ffceac8c7fa3dcfba4a09b1e43f2d"},
+    {file = "pytelegrambotapi-4.24.0.tar.gz", hash = "sha256:9e0b5c29f602465f367dfdeb49dadcb2b3fcb2b126caf8da577a0e125c1abd89"},
 ]
 
 [[package]]
