@@ -6,11 +6,14 @@ import json
 import logging
 
 from dotenv import load_dotenv
+from cex.binance_api import BinanceAPI
+from llm.openai_llm import GPT
+
+from pandas import DataFrame
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-from cex.binance_api import BinanceAPI
-from llm.openai_llm import GPT
+df = DataFrame()
 
 
 def engine(symbols: list | str):
@@ -18,11 +21,10 @@ def engine(symbols: list | str):
     if isinstance(symbols, str):
         symbols = [symbols]
     for symbol in symbols:
-        indicators = [
-            BinanceAPI(symbol, "15m").get_all_indicators(),  # 约最近15m*50=12.5小时的数据
-            BinanceAPI(symbol, "30m").get_all_indicators(),  # 约最近30m*50=25小时的数据
-            BinanceAPI(symbol, "1h").get_all_indicators(),  # 约最近1h*50=50小时的数据
-        ]
+        d15 = BinanceAPI(symbol, "15m").get_all_indicators()  # 约最近15m*50=12.5小时的数据
+        d30 = BinanceAPI(symbol, "30m").get_all_indicators()  # 约最近30m*50=25小时的数据
+        d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
+        indicators = [d15, d30, d1h]
 
         account = BinanceAPI(symbol, "1m")
         h = account.get_holdings()
@@ -52,11 +54,11 @@ def engine(symbols: list | str):
 if __name__ == "__main__":
     tokens = [
         "DOGEUSDT",
-        "XLMUSDT",
-        "SOLUSDT",
-        "SUIUSDT",
-        "ADAUSDT",
-        "PNUTUSDT",
-        "BOMEUSDT",
+        # "XLMUSDT",
+        # "SOLUSDT",
+        # "SUIUSDT",
+        # "ADAUSDT",
+        # "PNUTUSDT",
+        # "BOMEUSDT",
     ]
     engine(tokens)

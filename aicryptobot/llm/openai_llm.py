@@ -6,6 +6,7 @@
 import json
 import logging
 import os
+import time
 
 from openai import AzureOpenAI, OpenAI
 
@@ -34,6 +35,7 @@ class GPT(LLM):
         self.model = model
 
     def send(self, symbol: str, indicators: list, current: str) -> TradingAction:
+        time.sleep(10)
         logging.info("发送数据给 %s %s", self.client, self.model)
         messages = [
             {"role": "system", "content": self.system_prompt},
