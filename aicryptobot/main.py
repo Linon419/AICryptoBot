@@ -47,10 +47,10 @@ def engine(symbols: list | str):
         d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
         indicators = [d15, d30, d1h]
 
-        account = BinanceAPI(symbol, "1m")
+        account = BinanceAPI()
         h = account.get_holdings()
         recommendation = gpt.send(symbol, indicators, None if len(h) == 0 else json.dumps(h))
-        time.sleep(10)
+        time.sleep(15)
 
         action = recommendation["action"]
         detail = recommendation["detail"]
@@ -89,12 +89,23 @@ def engine(symbols: list | str):
 
 if __name__ == "__main__":
     tokens = [
+        "GRASSUSDT",
+        "PNUTUSDT",
+        "TROYUSDT",
+        "XRPUSDT",
+        "CRVUSDT",
         "DOGEUSDT",
-        # "XLMUSDT",
-        # "SOLUSDT",
-        # "SUIUSDT",
-        # "ADAUSDT",
-        # "PNUTUSDT",
-        # "BOMEUSDT",
+        "SOLUSDT",
+        "1000PEPEUSDT",
+        "LTCUSDT",
+        "XLMUSDT",
+        "ALGOUSDT",
+        "IOTAUSDT",
+        "TONUSDT",
+        "SUIUSDT",
+        "TRXUSDT",
+        "1000SHIBUSDT",
+        "OPUSDT",
     ]
+
     engine(tokens)

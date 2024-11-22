@@ -45,5 +45,14 @@ class GPT(LLM):
         if current:
             logging.info("已有持仓，添加额外信息中...")
             messages.append({"role": "user", "content": f"My current holdings: {current}"})
-        completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
-        return json.loads(completion.choices[0].message.content)
+        try:
+            completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+            return json.loads(completion.choices[0].message.content)
+        except:
+            logging.error("OpenAI API 请求失败")
+            return {
+                "action": "N/A",
+                "detail": "",
+                "take_profit": {"usdt": 0, "percentage": 0},
+                "stop_loss": {"usdt": 0, "percentage": 0},
+            }
