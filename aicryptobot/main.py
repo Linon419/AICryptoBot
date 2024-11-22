@@ -70,15 +70,7 @@ def engine(symbols: list | str):
         else:
             logging.error("无法识别的操作：%s", action)
 
-        item = {
-            "symbol": symbol,
-            "rsi6": json.loads(d30)[0]["rsi6"],
-            "rsi12": json.loads(d30)[0]["rsi12"],
-            "rsi24": json.loads(d30)[0]["rsi24"],
-            "macd-upperband": json.loads(d30)[0]["upperband"],
-            "macd-middleband": json.loads(d30)[0]["middleband"],
-            "macd-lowerband": json.loads(d30)[0]["lowerband"],
-        }
+        item = {"symbol": symbol}
         item.update(recommendation)
         data.append(item)
 
