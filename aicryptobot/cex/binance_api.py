@@ -148,8 +148,6 @@ class BinanceAPI(CEX):
 
     def get_holdings(self) -> list:
         data = self.__um_client.get_position_risk(symbol=self.__symbol)
-        if len(data) != 0:
-            logging.info("持仓信息：%s", data)
         return data
 
     def close_holdings(self, quantity=None):

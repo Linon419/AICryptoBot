@@ -48,8 +48,7 @@ def engine(symbols: list | str):
         indicators = [d15, d30, d1h]
 
         account = BinanceAPI()
-        h = account.get_holdings()
-        recommendation = gpt.send(symbol, indicators, None if len(h) == 0 else json.dumps(h))
+        recommendation = gpt.send(symbol, indicators, account.get_holdings())
         time.sleep(15)
 
         action = recommendation["action"]

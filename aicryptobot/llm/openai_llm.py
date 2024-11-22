@@ -34,7 +34,7 @@ class GPT(LLM):
 
         self.model = model
 
-    def send(self, symbol: str, indicators: list, current: str) -> TradingAction:
+    def send(self, symbol: str, indicators: list, holdings: dict) -> TradingAction:
         logging.info("发送数据给 %s %s", self.client, self.model)
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -42,14 +42,15 @@ class GPT(LLM):
         ]
         for indicator in indicators:
             messages.append({"role": "user", "content": indicator})
-        if current:
+        # holdings 必须和当前数据匹配
+        if holdings and holdings[0]["symbol"] == symbol:
             logging.info("已有持仓，添加额外信息中...")
-            messages.append({"role": "user", "content": f"My current holdings: {current}"})
+            messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
         try:
             completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
             return json.loads(completion.choices[0].message.content)
         except:
-            logging.error("OpenAI API 请求失败")
+            logging.error("%s:OpenAI API 请求失败", symbol)
             return {
                 "action": "N/A",
                 "detail": "",
