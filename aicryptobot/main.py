@@ -52,7 +52,6 @@ def engine(symbols: list | str):
 if __name__ == "__main__":
     tokens = [
         "DOGEUSDT",
-        "PEPEUSDT",
         "XLMUSDT",
         "SOLUSDT",
         "SUIUSDT",

@@ -118,7 +118,7 @@ class BinanceAPI(CEX):
         self.df["ema99"] = ema99
 
     def get_all_indicators(self):
-        logging.info("获取 %s %s的技术指标中....", self.__symbol, self.__interval)
+        logging.debug("获取 %s %s的技术指标中....", self.__symbol, self.__interval)
         self._boll()
         self._rsi()
         self._macd()
