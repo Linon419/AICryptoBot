@@ -90,4 +90,12 @@
 <h1>详细指标 30m间隔 {{now}}</h1>
 {{table}}
 </body>
+<script>
+    const tr = document.getElementsByTagName('tr');
+    // start with 1 to skip the header row
+    for (let i = 1; i < tr.length; i++) {
+        const symbol = tr[i].children[0].innerText;
+        tr[i].children[0].innerHTML = `<a href="https://www.binance.com/zh-CN/futures/${symbol}" target="_blank">${symbol}</a>`;
+    }
+</script>
 </html>
