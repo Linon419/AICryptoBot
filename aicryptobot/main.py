@@ -4,11 +4,13 @@
 
 import json
 import logging
+import time
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader
 
 load_dotenv()  # do not put these two after importing custom packages
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -19,24 +21,17 @@ from llm.openai_llm import GPT
 
 def show(df: pd.DataFrame):
     print(df.to_string())
-    table_html = df.to_html(index=False)
+    table = df.to_html(index=False)
+
+    cur_dir = Path(__file__).parent
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    full_html = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分析结果</title>
-</head>
-<body>
-    <h1>{now}</h1>
-    {table_html}
-</body>
-</html>
-    """
-    file = Path(__file__).parent.joinpath("output", f"analysis_{now}.html")
-    with open(file, "w", encoding="utf-8") as file:
+    p = Path(__file__).parent.joinpath("output", f"analysis_{now}.html")
+
+    env = Environment(loader=FileSystemLoader(cur_dir))
+    template = env.get_template("template.html")
+    full_html = template.render(now=now, table=table)
+
+    with open(p, "w", encoding="utf-8") as file:
         file.write(full_html)
 
 
@@ -55,6 +50,7 @@ def engine(symbols: list | str):
         account = BinanceAPI(symbol, "1m")
         h = account.get_holdings()
         recommendation = gpt.send(symbol, indicators, None if len(h) == 0 else json.dumps(h))
+        time.sleep(10)
 
         action = recommendation["action"]
         detail = recommendation["detail"]

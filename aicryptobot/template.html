@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析结果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #2e8b57;
+        }
+
+        .bullish, .bearish {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .bullish {
+            background-color: #f0fff0;
+        }
+
+        .bearish {
+            background-color: #fff0f0;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+        }
+
+        table th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #eaf6e9;
+        }
+
+    </style>
+</head>
+<body>
+<h1>看涨信号（预测上涨）</h1>
+<div class="bullish">
+    <ul>
+        <li><strong>RSI：</strong>在 30-50 区间上升，逐渐接近 60。</li>
+        <li><strong>MACD：</strong>金叉形成，柱状图由负变正并持续放大。</li>
+        <li><strong>BOLL：</strong>价格突破中轨并向上靠近上轨。</li>
+        <li><strong>VOL：</strong>成交量放大，买盘力量增强。</li>
+    </ul>
+</div>
+
+<h1>看跌信号（预测下跌）</h1>
+<div class="bearish">
+    <ul>
+        <li><strong>RSI：</strong>高于 70，逐渐下降至 50 以下。</li>
+        <li><strong>MACD：</strong>死叉形成，柱状图由正变负并持续放大。</li>
+        <li><strong>BOLL：</strong>价格跌破中轨，向下靠近下轨或突破下轨。</li>
+        <li><strong>VOL：</strong>成交量放大，卖盘力量增强，或放量下跌。</li>
+    </ul>
+</div>
+<h1>详细指标 30m间隔 {{now}}</h1>
+{{table}}
+</body>
+</html>
