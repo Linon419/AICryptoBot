@@ -38,18 +38,20 @@ class GPT(LLM):
     def __create(self, messages):
         return self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
 
-    def send(self, symbol: str, indicators: list, holdings: list) -> TradingAction:
+    def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
         logging.info("发送数据给 %s %s", self.client, self.model)
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": f"Token to analyze: {symbol}"},
         ]
-        for indicator in indicators:
-            messages.append({"role": "user", "content": indicator})
-        # holdings 必须和当前数据匹配
-        if holdings and holdings[0]["symbol"] == symbol:
-            logging.info("已有持仓，添加额外信息中...")
-            messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
+        for name, value in indicators.items():
+            messages.append({"role": "user", "content": f"interval: {name}, technical indicators: {value}"})
+        for holding in holdings:
+            # 持仓币种必须和当前币种匹配
+            if holding["symbol"] == symbol:
+                logging.info("已有持仓，添加额外信息中...")
+                messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
+                break
         try:
             completion = self.__create(messages)
             return json.loads(completion.choices[0].message.content)
