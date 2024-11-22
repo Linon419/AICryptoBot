@@ -56,7 +56,7 @@ if __name__ == "__main__":
         "SOLUSDT",
         "SUIUSDT",
         "ADAUSDT",
-        "SHIBUSDT",
         "PNUTUSDT",
+        "BOMEUSDT",
     ]
     engine(tokens)
