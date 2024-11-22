@@ -2,9 +2,7 @@
 # coding: utf-8
 # AICryptoBot - main.py
 
-import json
 import logging
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -49,7 +47,6 @@ def engine(symbols: list | str):
 
         account = BinanceAPI()
         recommendation = gpt.send(symbol, indicators, account.get_holdings())
-        time.sleep(15)
 
         action = recommendation["action"]
         detail = recommendation["detail"]
@@ -80,16 +77,11 @@ def engine(symbols: list | str):
 
 if __name__ == "__main__":
     tokens = [
-        "GRASSUSDT",
         "PNUTUSDT",
         "TROYUSDT",
-        "XRPUSDT",
         "CRVUSDT",
-        "DOGEUSDT",
-        "SOLUSDT",
         "1000PEPEUSDT",
         "LTCUSDT",
-        "XLMUSDT",
         "ALGOUSDT",
         "IOTAUSDT",
         "TONUSDT",

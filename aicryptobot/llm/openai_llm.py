@@ -6,9 +6,9 @@
 import json
 import logging
 import os
-import time
 
 from openai import AzureOpenAI, OpenAI
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 from llm import LLM
 from llm.definition import TradingAction
@@ -34,7 +34,11 @@ class GPT(LLM):
 
         self.model = model
 
-    def send(self, symbol: str, indicators: list, holdings: dict) -> TradingAction:
+    @retry(wait=wait_random_exponential(min=1, max=30), stop=stop_after_attempt(3))
+    def __create(self, messages):
+        return self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+
+    def send(self, symbol: str, indicators: list, holdings: list) -> TradingAction:
         logging.info("发送数据给 %s %s", self.client, self.model)
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -47,7 +51,7 @@ class GPT(LLM):
             logging.info("已有持仓，添加额外信息中...")
             messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
         try:
-            completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+            completion = self.__create(messages)
             return json.loads(completion.choices[0].message.content)
         except:
             logging.error("%s:OpenAI API 请求失败", symbol)
