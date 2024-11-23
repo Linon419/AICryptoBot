@@ -24,5 +24,6 @@ if __name__ == "__main__":
         symbols = args.symbols.split(",") if args.symbols else default_symbols
         analyzer(symbols)
     elif args.mode == "bot":
+        logging.info("Running as bot...")
         bot = TelegramBot()
         bot.run()

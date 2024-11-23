@@ -55,8 +55,8 @@ class GPT(LLM):
         try:
             completion = self.__create(messages)
             return json.loads(completion.choices[0].message.content)
-        except:
-            logging.error("%s:OpenAI API 请求失败", symbol)
+        except Exception as e:
+            logging.error("%s:OpenAI API 请求失败: %s", symbol, e)
             return {
                 "action": "N/A",
                 "detail": "",

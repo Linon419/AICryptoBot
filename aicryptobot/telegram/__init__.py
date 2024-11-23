@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 # AICryptoBot - __init__.py.py
-
+import logging
 import os
 
 import telebot
@@ -19,16 +19,19 @@ class TelegramBot:
     def __register_handlers(self):
         @self.bot.message_handler(commands=["start"])
         def start(message):
-            self.bot.reply_to(
-                message, "欢迎来到 AICryptoBot!发送交易对（如BTCUSDT）获取交易建议，多个交易对请用半角逗号隔开。"
-            )
+            self.bot.send_chat_action(message.chat.id, "typing")
+            self.bot.reply_to(message, "发送交易对（如BTCUSDT）获取交易建议，多个交易对请用半角逗号隔开。")
 
-        @self.bot.message_handler(chat_id=[260260121, 381599695, 521804980])
+        @self.bot.message_handler(func=lambda message: message.chat.id in [260260121, 381599695, 521804980])
         def query_crypto(message):
             pairs = message.text.split(",")
             for pair in pairs:
-                self.bot.reply_to(message, analyzer(pair))
+                pair = pair.upper()
+                self.bot.send_chat_action(message.chat.id, "typing")
+                logging.info("%s请求分析交易对：%s...", message.chat.id, pair)
+                text = f"{analyzer(pair)}\nhttps://www.binance.com/zh-CN/futures/{pair}"
+                self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):
         self.__register_handlers()
-        self.bot.polling(non_stop=True)
+        self.bot.infinity_polling()
