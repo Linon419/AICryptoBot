@@ -8,6 +8,7 @@ import logging
 import os
 
 from openai import AzureOpenAI, OpenAI
+from partial_json_parser import Allow, loads
 from tenacity import after, retry, stop_after_attempt, wait_random_exponential
 
 from llm import LLM
@@ -42,9 +43,8 @@ class GPT(LLM):
     def __create(self, messages) -> dict:
         # 请求失败，或者没有返回正确的格式
         completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
-        content = completion.choices[0].message.content
-        logging.info("API 返回数据: %s", content)
-        return json.loads(content)
+        content = completion.choices[0].message.content.replace("\n", "")
+        return loads(content, Allow.ALL)
 
     def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
@@ -63,7 +63,7 @@ class GPT(LLM):
         try:
             return self.__create(messages)
         except Exception as e:
-            logging.error("%s:OpenAI API 请求失败: %s", symbol, e)
+            logging.error("%s: OpenAI API 请求失败: %s", symbol, e)
             return {
                 "action": "N/A",
                 "detail": "",
