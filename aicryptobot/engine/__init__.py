@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import logging
+import webbrowser
 from datetime import datetime
 from pathlib import Path
 
@@ -23,8 +24,10 @@ def show(df: pd.DataFrame):
 
     env = Environment(loader=FileSystemLoader(cur_dir))
     template = env.get_template("template.html")
-    full_html = template.render(now=now, table=table)
-    output.joinpath(f"analysis_{now}.html").write_text(full_html)
+    html = template.render(now=now, table=table)
+    html_path = output.joinpath(f"analysis_{now}.html")
+    html_path.write_text(html)
+    webbrowser.open(html_path.absolute().as_uri(), new=0, autoraise=True)
 
 
 def analyzer(symbols: list | str) -> str:

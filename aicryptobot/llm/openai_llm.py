@@ -51,7 +51,7 @@ class GPT(LLM):
         for holding in holdings:
             # 持仓币种必须和当前币种匹配
             if holding["symbol"] == symbol:
-                logging.info("已有持仓，添加额外信息中...")
+                logging.info("已有持仓%s，添加额外信息中...", symbol)
                 messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
                 break
         try:
