@@ -35,8 +35,10 @@ class GPT(LLM):
         self.model = model
 
     @retry(wait=wait_random_exponential(min=1, max=30), stop=stop_after_attempt(3))
-    def __create(self, messages):
-        return self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+    def __create(self, messages) -> dict:
+        # 请求失败，或者没有返回正确的格式
+        completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+        return json.loads(completion.choices[0].message.content)
 
     def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
         logging.info("发送数据给 %s %s", self.client, self.model)
@@ -53,8 +55,7 @@ class GPT(LLM):
                 messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
                 break
         try:
-            completion = self.__create(messages)
-            return json.loads(completion.choices[0].message.content)
+            return self.__create(messages)
         except Exception as e:
             logging.error("%s:OpenAI API 请求失败: %s", symbol, e)
             return {
