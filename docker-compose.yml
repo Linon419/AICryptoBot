@@ -1,0 +1,9 @@
+version: "3.1"
+services:
+  bot:
+    image: ghcr.io/bennythink/aicryptobot
+    restart: always
+    env_file:
+      - .env
+    command:
+      - python main.py --mode=bot

@@ -41,7 +41,7 @@ class GPT(LLM):
         return json.loads(completion.choices[0].message.content)
 
     def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
-        logging.info("发送数据给 %s %s", self.client, self.model)
+        logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": f"Token to analyze: {symbol}"},
