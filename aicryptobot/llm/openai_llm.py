@@ -8,7 +8,7 @@ import logging
 import os
 
 from openai import AzureOpenAI, OpenAI
-from tenacity import retry, stop_after_attempt, wait_random_exponential
+from tenacity import after, retry, stop_after_attempt, wait_random_exponential
 
 from llm import LLM
 from llm.definition import TradingAction
@@ -34,11 +34,17 @@ class GPT(LLM):
 
         self.model = model
 
-    @retry(wait=wait_random_exponential(min=1, max=30), stop=stop_after_attempt(3))
+    @retry(
+        wait=wait_random_exponential(min=1, max=30),
+        stop=stop_after_attempt(3),
+        after=after.after_log(logging.getLogger(__name__), logging.WARNING),
+    )
     def __create(self, messages) -> dict:
         # 请求失败，或者没有返回正确的格式
         completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
-        return json.loads(completion.choices[0].message.content)
+        content = completion.choices[0].message.content
+        logging.info("API 返回数据: %s", content)
+        return json.loads(content)
 
     def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
