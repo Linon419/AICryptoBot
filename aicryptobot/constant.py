@@ -3,6 +3,8 @@
 
 # AICryptoBot - constant.py
 
+# 数据来源 https://www.binance.com/zh-CN/markets/overview
+# Array.from(document.querySelectorAll('.subtitle3.text-t-primary')).map(v=>v.innerText)
 all_tokens = {
     "Solana": ["PNUT", "BONK", "WIF", "RENDER", "BOME", "JTO", "ACT", "JUP", "IO", "W", "FIDA", "GMT", "TNSR"],
     "RWA": ["AVAX", "OM", "ICP", "MKR", "POLYX", "PENDLE", "SNX", "LUMIA", "HIFI", "DUSK", "LTO"],
