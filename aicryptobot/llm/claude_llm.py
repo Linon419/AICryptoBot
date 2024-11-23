@@ -15,7 +15,7 @@ class Claude(LLM):
         self.client = anthropic.Anthropic(base_url=base_url, api_key=api_key)
         self.model = model
 
-    def send(self):
+    def send(self, symbol: str, indicators: list, current: str):
         pass
 
     def set_system_prompt(self):

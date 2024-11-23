@@ -27,13 +27,14 @@ def show(df: pd.DataFrame):
     output.joinpath(f"analysis_{now}.html").write_text(full_html)
 
 
-def analyzer(symbols: list | str):
+def analyzer(symbols: list | str) -> str:
     gpt = GPT()
     data = []
     if isinstance(symbols, str):
         symbols = [symbols]
 
     for symbol in symbols:
+        symbol = symbol.upper()
         d15 = BinanceAPI(symbol, "15m").get_all_indicators()  # 约最近15m*50=12.5小时的数据
         d30 = BinanceAPI(symbol, "30m").get_all_indicators()  # 约最近30m*50=25小时的数据
         d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
@@ -66,3 +67,4 @@ def analyzer(symbols: list | str):
 
     df = pd.DataFrame(data)
     show(df)
+    return df.to_string()
