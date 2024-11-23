@@ -5,5 +5,4 @@ services:
     restart: always
     env_file:
       - .env
-    command:
-      - python main.py --mode=bot
+    command: [ "python","main.py","--mode=bot" ]
