@@ -26,10 +26,11 @@ class TelegramBot:
         def query_crypto(message):
             pairs = message.text.split(",")
             for pair in pairs:
-                pair = pair.upper()
                 self.bot.send_chat_action(message.chat.id, "typing")
+                pair = pair.upper()
                 logging.info("%s请求分析交易对：%s...", message.chat.id, pair)
-                text = f"{analyzer(pair)}\nhttps://www.binance.com/zh-CN/futures/{pair}"
+                result = analyzer(pair)
+                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):
