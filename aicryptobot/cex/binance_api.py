@@ -124,7 +124,7 @@ class BinanceAPI(CEX):
         self._macd()
         self._volume()
         self._ma()
-        self.df.drop(columns=["ignore", "close_time"], inplace=True)
+        self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count", "ema99"], inplace=True)
         self.df.dropna(inplace=True)
 
         return self.df.to_json(orient="records", date_format="iso")
