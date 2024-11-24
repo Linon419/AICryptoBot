@@ -38,11 +38,11 @@ def analyzer(symbols: list | str) -> str:
 
     for symbol in symbols:
         symbol = symbol.upper()
+        d5 = BinanceAPI(symbol, "5m").get_all_indicators()  # 约最近5m*50=4.16小时的数据
         d15 = BinanceAPI(symbol, "15m").get_all_indicators()  # 约最近15m*50=12.5小时的数据
         d30 = BinanceAPI(symbol, "30m").get_all_indicators()  # 约最近30m*50=25小时的数据
         d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
-        d2h = BinanceAPI(symbol, "2h").get_all_indicators()  # 约最近2h*50=100小时的数据
-        indicators = {"15m": d15, "30m": d30, "1h": d1h, "2h": d2h}
+        indicators = {"5m": d5, "15m": d15, "30m": d30, "1h": d1h}
         account = BinanceAPI()
         recommendation = gpt.send(symbol, indicators, account.get_holdings())
 
