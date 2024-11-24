@@ -18,7 +18,7 @@ if os.getenv("ENV", "dev") != "dev":
 
 class BinanceAPI(CEX):
 
-    def __init__(self, symbol: str = None, interval: str = "15m"):
+    def __init__(self, symbol: str = None, interval: str = "15m", limit=50):
         suffix = ""
         if os.getenv("ENV", "dev") == "dev":
             suffix = "_TEST"
@@ -31,12 +31,13 @@ class BinanceAPI(CEX):
         self.df = pd.DataFrame()
         self.__symbol = symbol
         self.__interval = interval
+        self.__limit = limit
         if symbol is not None:
             self._candlestick()
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=150)
+        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=100 + self.__limit)
         columns = [
             "open_time",
             "open",

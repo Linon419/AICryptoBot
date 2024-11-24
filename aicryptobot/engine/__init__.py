@@ -43,14 +43,10 @@ def analyzer(symbols: list | str, is_me=False) -> str:
         d30 = BinanceAPI(symbol, "30m").get_all_indicators()  # 约最近30m*50=25小时的数据
         d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
         indicators = {"5m": d5, "15m": d15, "30m": d30, "1h": d1h}
+
         account = BinanceAPI()
         recommendation = gpt.send(symbol, indicators, account.get_holdings())
-
-        action = recommendation["action"]
-        detail = recommendation["detail"]
-        take_profit = recommendation["take_profit"]
-        stop_loss = recommendation["stop_loss"]
-        usdt = 300
+        action, detail = recommendation["action"], recommendation["detail"]
 
         if action == "long":
             logging.info("GPT 推荐做多 %s，详情：%s", symbol, detail)
