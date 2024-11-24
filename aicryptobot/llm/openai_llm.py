@@ -16,7 +16,8 @@ from llm.definition import TradingAction
 
 
 class GPT(LLM):
-    def __init__(self):
+    def __init__(self, is_me=False):
+        self.is_me = is_me
         prefix, provider = "", os.getenv("OPENAI_PROVIDER", "OpenAI")
         if provider == "Azure":
             prefix = "AZURE_"
@@ -56,7 +57,7 @@ class GPT(LLM):
             messages.append({"role": "user", "content": f"interval: {name}, technical indicators: {value}"})
         for holding in holdings:
             # 持仓币种必须和当前币种匹配
-            if holding["symbol"] == symbol:
+            if self.is_me and holding["symbol"] == symbol:
                 logging.info("已有持仓%s，添加额外信息中...", symbol)
                 messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
                 break

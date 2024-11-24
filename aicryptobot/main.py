@@ -4,6 +4,7 @@
 
 import argparse
 import logging
+import os
 
 from dotenv import load_dotenv
 
@@ -20,12 +21,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == "script":
-        default_symbols = [
-            "ATOMUSDT",
-            "SUIUSDT",
-        ]
+        default_symbols = ["SUIUSDT"]
         symbols = args.symbols.split(",") if args.symbols else default_symbols
-        analyzer(symbols)
+        analyzer(symbols, os.uname().nodename == "Yogurt.lan")
     elif args.mode == "bot":
         logging.info("Running as bot...")
         bot = TelegramBot()

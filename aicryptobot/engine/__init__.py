@@ -30,8 +30,8 @@ def show(df: pd.DataFrame):
     webbrowser.open(html_path.absolute().as_uri(), new=0, autoraise=True)
 
 
-def analyzer(symbols: list | str) -> str:
-    gpt = GPT()
+def analyzer(symbols: list | str, is_me=False) -> str:
+    gpt = GPT(is_me)
     data = []
     if isinstance(symbols, str):
         symbols = [symbols]
