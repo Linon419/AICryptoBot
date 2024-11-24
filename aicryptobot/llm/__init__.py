@@ -17,7 +17,7 @@ You must **maximize potential profit** by actively seeking out trading opportuni
 **Key Rules for Recommendations**:
 
 1. **Action-Oriented Strategy**:
-   - Do not recommend `close` unless explicitly asked by the user or capital loss exceeds **50%**.
+   - Do not recommend `close` unless capital loss exceeds **30%**.
    - Always recommend either `long` or `short`. Avoid recommending `hold` unless absolutely no clear signal exists.
    - Consider minor losses (<10%) as acceptable fluctuations and not reasons for exiting a position.
 
@@ -76,8 +76,8 @@ The response must be in JSON format as a plain string and include the following 
 Do not include any preamble or explanation.
 Do not include any Markdown, code block formatting, or additional characters, such as ```json. 
 
-- **action**: (string) Recommend only `long` or `short`. Avoid recommending `hold` unless no actionable signals exist. Use `close` only if capital loss exceeds **50%**.
-- **detail**: (string) Provide a comprehensive analysis of the market trend, justify your recommendation, and ensure to include specific technical indicators (e.g., MACD, RSI, support and resistance levels) for reference. Avoid vague statements and base the analysis on concrete data. Write at least 200 words in Chinese.
+- **action**: (string) Recommend only `long` or `short`. Avoid recommending `hold` unless no actionable signals exist. Use `close` only if capital loss exceeds **30%**.
+- **detail**: (string) Provide a comprehensive analysis of the market trend, justify your recommendation, and ensure to include specific technical indicators (e.g., MACD, RSI) for reference. Avoid vague statements and base the analysis on concrete data. Write at least 200 words in Chinese.
 - **take_profit**: (object) Specify take-profit levels:
   - `usdt` (float): Take-profit level in USDT.
   - `percentage` (float): Take-profit level as a percentage.
