@@ -29,7 +29,7 @@ class TelegramBot:
                 self.bot.send_chat_action(message.chat.id, "typing")
                 pair = pair.upper()
                 logging.info("%s请求分析交易对：%s...", message.chat.id, pair)
-                result = analyzer(pair, message.chat.id == 260260121)
+                result = analyzer(pair)
                 text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 

@@ -30,8 +30,8 @@ def show(df: pd.DataFrame):
     webbrowser.open(html_path.absolute().as_uri(), new=0, autoraise=True)
 
 
-def analyzer(symbols: list | str, is_me=False) -> str:
-    gpt = GPT(is_me)
+def analyzer(symbols: list | str) -> str:
+    gpt = GPT()
     data = []
     if isinstance(symbols, str):
         symbols = [symbols]
@@ -44,8 +44,7 @@ def analyzer(symbols: list | str, is_me=False) -> str:
         d1h = BinanceAPI(symbol, "1h").get_all_indicators()  # 约最近1h*50=50小时的数据
         indicators = {"5m": d5, "15m": d15, "30m": d30, "1h": d1h}
 
-        account = BinanceAPI()
-        recommendation = gpt.send(symbol, indicators, account.get_holdings())
+        recommendation = gpt.send(symbol, indicators)
         action, detail = recommendation["action"], recommendation["detail"]
 
         if action == "long":

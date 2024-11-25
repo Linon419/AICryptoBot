@@ -23,7 +23,7 @@ if __name__ == "__main__":
     if args.mode == "script":
         default_symbols = ["SUIUSDT"]
         symbols = args.symbols.split(",") if args.symbols else default_symbols
-        analyzer(symbols, os.uname().nodename == "Yogurt.lan")
+        analyzer(symbols)
     elif args.mode == "bot":
         logging.info("Running as bot...")
         bot = TelegramBot()

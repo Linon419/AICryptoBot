@@ -16,8 +16,7 @@ from llm.definition import TradingAction
 
 
 class GPT(LLM):
-    def __init__(self, is_me=False):
-        self.is_me = is_me
+    def __init__(self):
         prefix, provider = "", os.getenv("OPENAI_PROVIDER", "OpenAI")
         if provider == "Azure":
             prefix = "AZURE_"
@@ -47,7 +46,7 @@ class GPT(LLM):
         content = completion.choices[0].message.content.replace("\n", "")
         return loads(content, Allow.ALL)
 
-    def send(self, symbol: str, indicators: dict, holdings: list) -> TradingAction:
+    def send(self, symbol: str, indicators: dict) -> TradingAction:
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -55,12 +54,6 @@ class GPT(LLM):
         ]
         for name, value in indicators.items():
             messages.append({"role": "user", "content": f"interval: {name}, technical indicators: {value}"})
-        for holding in holdings:
-            # 持仓币种必须和当前币种匹配
-            if self.is_me and holding["symbol"] == symbol:
-                logging.info("已有持仓%s，添加额外信息中...", symbol)
-                messages.append({"role": "user", "content": f"My current holdings: {holdings}"})
-                break
         try:
             return self.__create(messages)
         except Exception as e:
