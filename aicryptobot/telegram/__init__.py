@@ -42,7 +42,7 @@ class TelegramBot:
         def private_query(message: Message):
             user_input = message.text.split()[-1].strip()
             if "/query@" in user_input:
-                self.bot.reply_to(message, "请提供交易对，如 `/query@burn_cryptobot btcusdt`")
+                self.bot.reply_to(message, "请提供交易对，如 `/query@burn_cryptobot btcusdt`", parse_mode="markdown")
                 return
 
             pairs = user_input.split(",")
