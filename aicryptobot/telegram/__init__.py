@@ -22,7 +22,7 @@ class TelegramBot:
             self.bot.send_chat_action(message.chat.id, "typing")
             self.bot.reply_to(message, "发送交易对（如BTCUSDT）获取交易建议，多个交易对请用半角逗号隔开。")
 
-        @self.bot.message_handler(func=lambda message: message.chat.id in [260260121, 381599695, 521804980])
+        @self.bot.message_handler(func=lambda message: message.chat.id in [260260121, 381599695, 521804980,91024550,716648345])
         def query_crypto(message):
             pairs = message.text.split(",")
             for pair in pairs:
