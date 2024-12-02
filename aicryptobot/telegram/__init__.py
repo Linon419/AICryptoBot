@@ -36,7 +36,7 @@ class TelegramBot:
 
         @self.bot.message_handler(commands=["/query"])
         def group_query(message: Message):
-            self.private_query(message)
+            private_query(message)
 
         @self.bot.message_handler(func=lambda message: self.check(message))
         def private_query(message: Message):
@@ -51,8 +51,7 @@ class TelegramBot:
                 pair = pair.upper()
                 logging.info("%s@%s分析交易：%s...", message.chat.id, message.from_user.id, pair)
                 result = analyzer(pair)
-                gh = "https://github.com/BennyThink/AICryptoBot"
-                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}\n\n欢迎加入贡献：{gh}"
+                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):
