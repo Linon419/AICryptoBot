@@ -18,7 +18,7 @@ if os.getenv("ENV", "dev") != "dev":
 
 class BinanceAPI(CEX):
 
-    def __init__(self, symbol: str = None, interval: str = "15m", limit=50):
+    def __init__(self, symbol: str = None, interval: str = "15m", count=50):
         suffix = ""
         if os.getenv("ENV", "dev") == "dev":
             suffix = "_TEST"
@@ -31,13 +31,13 @@ class BinanceAPI(CEX):
         self.df = pd.DataFrame()
         self.__symbol = symbol
         self.__interval = interval
-        self.__limit = limit
+        self.__count = count
         if symbol is not None:
             self._candlestick()
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=100 + self.__limit)
+        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=100 + self.__count)
         columns = [
             "open_time",
             "open",
@@ -127,8 +127,22 @@ class BinanceAPI(CEX):
         self._ma()
         self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count", "ema99"], inplace=True)
         self.df.dropna(inplace=True)
+        # 转换数据格式 rsi保留证书，macd boll ema active_buy_value 保留两位小数
+        self.df["rsi6"] = self.df["rsi6"].astype(int)
+        self.df["rsi12"] = self.df["rsi12"].astype(int)
+        self.df["rsi24"] = self.df["rsi24"].astype(int)
+        self.df["dif"] = self.df["dif"].round(2)
+        self.df["dea"] = self.df["dea"].round(2)
+        self.df["macd"] = self.df["macd"].round(2)
+        self.df["upperband"] = self.df["upperband"].round(2)
+        self.df["middleband"] = self.df["middleband"].round(2)
+        self.df["lowerband"] = self.df["lowerband"].round(2)
+        self.df["ema7"] = self.df["ema7"].round(2)
+        self.df["ema25"] = self.df["ema25"].round(2)
+        self.df["active_buy_value"] = self.df["active_buy_value"].round(2)
 
-        return self.df.to_json(orient="records", date_format="iso")
+        # 秒级时间戳
+        return self.df.to_json(orient="records", date_format="epoch", date_unit="s")
 
     def __str__(self):
         return "binance"

@@ -21,7 +21,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == "script":
-        default_symbols = ["xlmUSDT"]
+        default_symbols = ["LTCUSDT"]
         symbols = args.symbols.split(",") if args.symbols else default_symbols
         analyzer(symbols)
     elif args.mode == "bot":

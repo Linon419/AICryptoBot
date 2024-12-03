@@ -38,10 +38,27 @@ def analyzer(symbols: list | str) -> str:
 
     for symbol in symbols:
         symbol = symbol.upper()
-        d15 = BinanceAPI(symbol, "15m", limit=30).get_all_indicators()
-        d30 = BinanceAPI(symbol, "30m", limit=30).get_all_indicators()
-        d1h = BinanceAPI(symbol, "1h", limit=30).get_all_indicators()
-        indicators = {"15m": d15, "30m": d30, "1h": d1h}
+        d1m = BinanceAPI(symbol, "1m", count=50).get_all_indicators()  # 最近50分钟（细节）
+        d5m = BinanceAPI(symbol, "5m", count=60).get_all_indicators()  # 最近5小时（短线波动）
+        d15m = BinanceAPI(symbol, "15m", count=50).get_all_indicators()  # 最近12.5小时（日内趋势）
+        d1h = BinanceAPI(symbol, "1h", count=40).get_all_indicators()  # 最近40小时（日内到短期趋势）
+        d2h = BinanceAPI(symbol, "2h", count=30).get_all_indicators()  # 最近2.5天（新增，补充中期波动）
+        d4h = BinanceAPI(symbol, "4h", count=30).get_all_indicators()  # 最近5天（背景趋势）
+        d8h = BinanceAPI(symbol, "8h", count=20).get_all_indicators()  # 最近6.66天（中期背景趋势）
+        d12h = BinanceAPI(symbol, "12h", count=15).get_all_indicators()  # 最近7.5天（长期背景趋势）
+        d1d = BinanceAPI(symbol, "1d", count=10).get_all_indicators()  # 最近10天（新增，日线趋势背景）
+
+        indicators = {
+            "1m": d1m,
+            "5m": d5m,
+            "15m": d15m,
+            "1h": d1h,
+            "2h": d2h,
+            "4h": d4h,
+            "8h": d8h,
+            "12h": d12h,
+            "1d": d1d,
+        }
 
         recommendation = gpt.send(symbol, indicators)
         action, detail = recommendation["action"], recommendation["detail"]

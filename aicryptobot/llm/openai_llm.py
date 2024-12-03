@@ -50,10 +50,10 @@ class GPT(LLM):
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
         messages = [
             {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": f"Token to analyze: {symbol}"},
+            {"role": "user", "content": f"Token: {symbol}"},
         ]
         for name, value in indicators.items():
-            messages.append({"role": "user", "content": f"interval: {name}, technical indicators: {value}"})
+            messages.append({"role": "user", "content": f"interval: {name}, data: {value}"})
         try:
             return self.__create(messages)
         except Exception as e:
