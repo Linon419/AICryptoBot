@@ -38,15 +38,15 @@ def analyzer(symbols: list | str) -> str:
 
     for symbol in symbols:
         symbol = symbol.upper()
-        d1m = BinanceAPI(symbol, "1m", count=50).get_all_indicators()  # 最近50分钟（细节）
-        d5m = BinanceAPI(symbol, "5m", count=60).get_all_indicators()  # 最近5小时（短线波动）
-        d15m = BinanceAPI(symbol, "15m", count=50).get_all_indicators()  # 最近12.5小时（日内趋势）
-        d1h = BinanceAPI(symbol, "1h", count=40).get_all_indicators()  # 最近40小时（日内到短期趋势）
-        d2h = BinanceAPI(symbol, "2h", count=30).get_all_indicators()  # 最近2.5天（新增，补充中期波动）
-        d4h = BinanceAPI(symbol, "4h", count=30).get_all_indicators()  # 最近5天（背景趋势）
-        d8h = BinanceAPI(symbol, "8h", count=20).get_all_indicators()  # 最近6.66天（中期背景趋势）
-        d12h = BinanceAPI(symbol, "12h", count=15).get_all_indicators()  # 最近7.5天（长期背景趋势）
-        d1d = BinanceAPI(symbol, "1d", count=10).get_all_indicators()  # 最近10天（新增，日线趋势背景）
+        d1m = BinanceAPI(symbol, "1m", count=30).get_all_indicators()  # 最近30分钟（细节）
+        d5m = BinanceAPI(symbol, "5m", count=40).get_all_indicators()  # 最近3小时20分钟（短线波动）
+        d15m = BinanceAPI(symbol, "15m", count=30).get_all_indicators()  # 最近7.5小时（日内趋势）
+        d1h = BinanceAPI(symbol, "1h", count=25).get_all_indicators()  # 最近25小时（日内到短期趋势）
+        d2h = BinanceAPI(symbol, "2h", count=15).get_all_indicators()  # 最近1.25天（中期波动）
+        d4h = BinanceAPI(symbol, "4h", count=10).get_all_indicators()  # 最近1.66天（背景趋势）
+        d8h = BinanceAPI(symbol, "8h", count=8).get_all_indicators()  # 最近2.66天（中期背景趋势）
+        d12h = BinanceAPI(symbol, "12h", count=6).get_all_indicators()  # 最近3天（长期背景趋势）
+        d1d = BinanceAPI(symbol, "1d", count=5).get_all_indicators()  # 最近5天（日线趋势背景）
 
         indicators = {
             "1m": d1m,
