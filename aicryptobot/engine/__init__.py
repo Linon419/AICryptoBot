@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import logging
+import os
 import webbrowser
 from datetime import datetime
 from pathlib import Path
@@ -38,28 +39,17 @@ def analyzer(symbols: list | str) -> str:
 
     for symbol in symbols:
         symbol = symbol.upper()
-        d1m = BinanceAPI(symbol, "1m", count=30).get_all_indicators()  # 最近30分钟（细节）
-        d5m = BinanceAPI(symbol, "5m", count=40).get_all_indicators()  # 最近3小时20分钟（短线波动）
-        d15m = BinanceAPI(symbol, "15m", count=30).get_all_indicators()  # 最近7.5小时（日内趋势）
-        d1h = BinanceAPI(symbol, "1h", count=25).get_all_indicators()  # 最近25小时（日内到短期趋势）
-        d2h = BinanceAPI(symbol, "2h", count=15).get_all_indicators()  # 最近1.25天（中期波动）
-        d4h = BinanceAPI(symbol, "4h", count=10).get_all_indicators()  # 最近1.66天（背景趋势）
-        d8h = BinanceAPI(symbol, "8h", count=8).get_all_indicators()  # 最近2.66天（中期背景趋势）
-        d12h = BinanceAPI(symbol, "12h", count=6).get_all_indicators()  # 最近3天（长期背景趋势）
-        d1d = BinanceAPI(symbol, "1d", count=5).get_all_indicators()  # 最近5天（日线趋势背景）
 
-        indicators = {
-            "1m": d1m,
-            "5m": d5m,
-            "15m": d15m,
-            "1h": d1h,
-            "2h": d2h,
-            "4h": d4h,
-            "8h": d8h,
-            "12h": d12h,
-            "1d": d1d,
-        }
+        intervals = os.getenv("BINANCE_INTERVAL", "1m=30,5m=40,15m=30,1h=25,2h=15,4h=10,8h=8,12h=6,1d=5")
+        # 1m=30 最近30分钟（细节）   5m=40 最近3小时20分钟（短线波动）   15m=30 最近7.5小时（日内趋势）
+        # 1h=25 最近25小时（日内到短期趋势）   2h=15 最近1.25天（中期波动）   4h=10 最近1.66天（背景趋势）
+        # 8h=8 最近2.66天（中期背景趋势）   12h=6 最近3天（长期背景趋势）   1d=5 最近5天（日线趋势背景）
+        indicators = {}
+        for item in intervals.split(","):
+            interval, count = item.split("=")
+            indicators[interval] = BinanceAPI(symbol, interval, count=int(count)).get_all_indicators()
 
+        logging.info("采集数据密度：%s", indicators.keys())
         recommendation = gpt.send(symbol, indicators)
         action, detail = recommendation["action"], recommendation["detail"]
 

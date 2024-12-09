@@ -16,8 +16,8 @@ class TelegramBot:
         self.bot = telebot.TeleBot(token=os.getenv("BOT_TOKEN"))
 
     def check(self, message: Message):
-        users = [260260121, 381599695, 521804980, 91024550, 716648345]
-        groups = [-1001886218691]
+        users = [int(i) for i in os.getenv("BOT_ALLOW_USER").split(",")]
+        groups = [int(i) for i in os.getenv("BOT_ALLOW_GROUP").split(",")]
 
         if message.from_user.id in users:
             return True
@@ -51,7 +51,7 @@ class TelegramBot:
                 pair = pair.upper()
                 logging.info("%s@%s分析交易：%s...", message.chat.id, message.from_user.id, pair)
                 result = analyzer(pair)
-                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}"
+                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}\n\n开源：https://github.com/BennyThink/AICryptoBot"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):

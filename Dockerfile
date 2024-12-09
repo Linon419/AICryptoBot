@@ -19,3 +19,5 @@ WORKDIR /app
 COPY --from=pybuilder /build/.venv/lib/ /usr/local/lib/
 COPY --from=pybuilder /usr/lib/libta_lib* /usr/lib/
 COPY aicryptobot /app
+
+CMD ["python", "main.py"]
