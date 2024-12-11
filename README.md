@@ -133,6 +133,7 @@ black --line-length 120 . && isort --profile black .
 * 币安文档：[https://www.binance.com/zh-CN/binance-api](https://www.binance.com/zh-CN/binance-api)
 * 头顶冒火🤯 GPT 接口站：[https://burn.hair/](https://burn.hair/register?aff=lNgp️)
 * 头顶冒火🤯 Claude+Mistral+Grok+GPT模型：[https://api.burn.hair/](https://api.burn.hair)
+* 小白手把手使用教程：https://dmesg.app/candlestick-llm.html/2
 
 # 赞赏
 
