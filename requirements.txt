@@ -1,0 +1,23 @@
+python-okx==0.3.3
+binance-connector==3.9.0
+python-dotenv>=1.0.1
+black>=24.8.0
+openai>=1.54.5
+anthropic>=0.39.0
+isort>=5.13.2
+requests>=2.32.3
+
+numpy>=2.0.2
+pandas>=2.2.3
+binance-futures-connector>=4.1.0
+pytelegrambotapi>=4.24.0
+Jinja2>=3.1.4
+tenacity>=9.0.0
+partial-json-parser>=0.2.1.1.post4
+beautifulsoup4>=4.12.3
+redis>=5.2.0
+
+# macOS & Linux
+#TA-Lib>=0.5.1
+# Windows https://github.com/cgohlke/talib-build/releases/tag/v0.5.1
+#https://github.com/cgohlke/talib-build/releases/download/v0.5.1/ta_lib-0.5.1-cp313-cp313-win_amd64.whl
