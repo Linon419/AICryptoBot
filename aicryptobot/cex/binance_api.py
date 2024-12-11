@@ -12,22 +12,12 @@ from binance.um_futures import UMFutures
 
 from cex import CEX
 
-if os.getenv("ENV", "dev") != "dev":
-    logging.warning("⚠️⚠️⚠️生产环境⚠️⚠️⚠️️")
-
 
 class BinanceAPI(CEX):
 
     def __init__(self, symbol: str = None, interval: str = "15m", count=50):
-        suffix = ""
-        if os.getenv("ENV", "dev") == "dev":
-            suffix = "_TEST"
-        api_key, api_secret, base_url = (
-            os.getenv(f"BINANCE_API_KEY{suffix}"),
-            os.getenv(f"BINANCE_API_SECRET{suffix}"),
-            os.getenv(f"BINANCE_BASE_URL{suffix}"),
-        )
-        self.__um_client = UMFutures(key=api_key, secret=api_secret, base_url=base_url)
+        api_key, api_secret = (os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_API_SECRET"))
+        self.__um_client = UMFutures(key=api_key, secret=api_secret)
         self.df = pd.DataFrame()
         self.__symbol = symbol
         self.__interval = interval
