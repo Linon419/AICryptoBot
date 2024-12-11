@@ -19,7 +19,7 @@ def show(df: pd.DataFrame):
     table = df.to_html(index=False)
 
     cur_dir = Path(__file__).parent
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.now().strftime("%Y-%m-%d %H_%M_%S")
     output = Path(__file__).parent.parent.joinpath("output")
     output.mkdir(exist_ok=True)
 
@@ -27,7 +27,7 @@ def show(df: pd.DataFrame):
     template = env.get_template("template.html")
     html = template.render(now=now, table=table)
     html_path = output.joinpath(f"analysis_{now}.html")
-    html_path.write_text(html)
+    html_path.write_text(html, encoding="u8")
     webbrowser.open(html_path.absolute().as_uri(), new=0, autoraise=True)
 
 
