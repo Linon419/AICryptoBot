@@ -18,6 +18,6 @@ FROM python:3.12-slim AS runner
 WORKDIR /app
 COPY --from=pybuilder /build/.venv/lib/ /usr/local/lib/
 COPY --from=pybuilder /usr/lib/libta_lib* /usr/lib/
-COPY aicryptobot /app
+COPY src /app
 
 CMD ["python", "main.py"]

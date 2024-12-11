@@ -44,7 +44,7 @@
 具体可用命令参考下一节
 
 ```shell
-docker run ghcr.io/bennythink/aicryptobot
+docker run ghcr.io/bennythink/src
 ```
 
 # 手动配置环境
@@ -118,8 +118,8 @@ python main.py --mode=bot
 如果在 Docker 中运行，那么直接接配置好环境变量，然后运行即可
 
 ```shell
-docker run --env-file .env ghcr.io/bennythink/aicryptobot --symbols=ETHUSDT,BTCUSDT
-docker run --env-file .env ghcr.io/bennythink/aicryptobot --mode=bot
+docker run --env-file .env ghcr.io/bennythink/src --symbols=ETHUSDT,BTCUSDT
+docker run --env-file .env ghcr.io/bennythink/src --mode=bot
 ```
 
 # 代码自动格式化

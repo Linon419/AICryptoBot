@@ -168,4 +168,4 @@ cython_debug/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
 /.idea/AICryptoBot.iml
-/aicryptobot/output/*
+/src/output/*
