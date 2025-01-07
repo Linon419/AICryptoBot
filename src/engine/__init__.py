@@ -10,7 +10,8 @@ from pathlib import Path
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 
-from cex.binance_api import BinanceAPI
+from datasource.binance_api import BinanceAPI
+from datasource.tradingview import TradingViewAPI
 from llm.openai_llm import GPT
 
 
@@ -31,6 +32,13 @@ def show(df: pd.DataFrame):
     webbrowser.open(html_path.absolute().as_uri(), new=0, autoraise=True)
 
 
+def get_indicators(symbol, interval, count):
+    if symbol.endswith("USDT"):
+        return BinanceAPI(symbol, interval, count=int(count)).get_all_indicators()
+    else:
+        return TradingViewAPI(symbol, interval, count=int(count)).get_all_indicators()
+
+
 def analyzer(symbols: list | str) -> str:
     gpt = GPT()
     data = []
@@ -47,7 +55,7 @@ def analyzer(symbols: list | str) -> str:
         indicators = {}
         for item in intervals.split(","):
             interval, count = item.split("=")
-            indicators[interval] = BinanceAPI(symbol, interval, count=int(count)).get_all_indicators()
+            indicators[interval] = get_indicators(symbol, interval, count)
 
         logging.info("采集数据密度：%s", indicators.keys())
         recommendation = gpt.send(symbol, indicators)

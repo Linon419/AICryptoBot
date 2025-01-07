@@ -48,10 +48,17 @@ class GPT(LLM):
 
     def send(self, symbol: str, indicators: dict) -> TradingAction:
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": f"Token: {symbol}"},
-        ]
+
+        if symbol.endswith("USDT"):
+            messages = [
+                {"role": "system", "content": self.crypto_system_prompt},
+                {"role": "user", "content": f"Token: {symbol}"},
+            ]
+        else:
+            messages = [
+                {"role": "system", "content": self.stock_system_prompt},
+                {"role": "user", "content": f"stock: {symbol}"},
+            ]
         for name, value in indicators.items():
             messages.append({"role": "user", "content": f"interval: {name}, data: {value}"})
         try:

@@ -10,10 +10,10 @@ import pandas as pd
 import talib
 from binance.um_futures import UMFutures
 
-from cex import CEX
+from datasource import DataSource
 
 
-class BinanceAPI(CEX):
+class BinanceAPI(DataSource):
 
     def __init__(self, symbol: str = None, interval: str = "15m", count=50):
         api_key, api_secret = (os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_API_SECRET"))
