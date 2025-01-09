@@ -11,7 +11,7 @@ import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 
 from datasource.binance_api import BinanceAPI
-from datasource.tradingview import TradingViewAPI
+from datasource.stock import StockAPI
 from llm.openai_llm import GPT
 
 
@@ -36,7 +36,7 @@ def get_indicators(symbol, interval, count):
     if symbol.endswith("USDT"):
         return BinanceAPI(symbol, interval, count=int(count)).get_all_indicators()
     else:
-        return TradingViewAPI(symbol, interval, count=int(count)).get_all_indicators()
+        return StockAPI(symbol, interval, count=int(count)).get_all_indicators()
 
 
 def analyzer(symbols: list | str) -> str:
@@ -47,13 +47,16 @@ def analyzer(symbols: list | str) -> str:
 
     for symbol in symbols:
         symbol = symbol.upper()
-
-        intervals = os.getenv("BINANCE_INTERVAL", "1m=30,5m=40,15m=30,1h=25,2h=15,4h=10,8h=8,12h=6,1d=5")
         # 1m=30 最近30分钟（细节）   5m=40 最近3小时20分钟（短线波动）   15m=30 最近7.5小时（日内趋势）
         # 1h=25 最近25小时（日内到短期趋势）   2h=15 最近1.25天（中期波动）   4h=10 最近1.66天（背景趋势）
         # 8h=8 最近2.66天（中期背景趋势）   12h=6 最近3天（长期背景趋势）   1d=5 最近5天（日线趋势背景）
+        if symbol.endswith("USDT"):
+            interval = os.getenv("BINANCE_INTERVAL", "1m=30,5m=40,15m=30,1h=25,2h=15,4h=10,8h=8,12h=6,1d=5")
+        else:
+            interval = os.getenv("STOCK_INTERVAL", "1d=50,5d=40,1wk=30,1mo=20")
+
         indicators = {}
-        for item in intervals.split(","):
+        for item in interval.split(","):
             interval, count = item.split("=")
             indicators[interval] = get_indicators(symbol, interval, count)
 

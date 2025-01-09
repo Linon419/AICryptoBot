@@ -24,6 +24,8 @@ dependencies = [
     "partial-json-parser>=0.2.1.1.post4",
     "beautifulsoup4>=4.12.3",
     "redis>=5.2.0",
+    "yfinance>=0.2.51",
+    "dateparser>=1.2.0",
 ]
 
 requires-python = ">=3.9"

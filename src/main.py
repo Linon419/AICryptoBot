@@ -21,7 +21,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == "script":
-        default_symbols = ["LTCUSDT", "ETHUSDT", "BTCUSDT", "TONUSDT"]
+        default_symbols = ["LTCUSDT", "MSFT"]
         symbols = args.symbols.split(",") if args.symbols else default_symbols
         analyzer(symbols)
     elif args.mode == "bot":

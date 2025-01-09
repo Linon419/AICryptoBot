@@ -16,7 +16,8 @@ tenacity>=9.0.0
 partial-json-parser>=0.2.1.1.post4
 beautifulsoup4>=4.12.3
 redis>=5.2.0
-
+yfinance==0.2.51
+dateparser==1.2.0
 # macOS & Linux
 #TA-Lib>=0.5.1
 # Windows https://github.com/cgohlke/talib-build/releases/tag/v0.5.1
