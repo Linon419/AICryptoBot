@@ -67,7 +67,7 @@ class BinanceAPI(DataSource):
         self._macd()
         self._volume()
         self._ma()
-        self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count", "ema99"], inplace=True)
+        self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count"], inplace=True)
         self.df.dropna(inplace=True)
         # 转换数据格式 rsi保留整数，macd boll ema active_buy_value 保留两位小数
         self.df["rsi6"] = self.df["rsi6"].astype(int)
@@ -79,8 +79,10 @@ class BinanceAPI(DataSource):
         self.df["upperband"] = self.df["upperband"].round(2)
         self.df["middleband"] = self.df["middleband"].round(2)
         self.df["lowerband"] = self.df["lowerband"].round(2)
-        self.df["ema7"] = self.df["ema7"].round(2)
-        self.df["ema25"] = self.df["ema25"].round(2)
+        self.df["ema21"] = self.df["ema21"].round(2)
+        self.df["ema55"] = self.df["ema55"].round(2)
+        self.df["ema100"] = self.df["ema100"].round(2)
+        self.df["ema200"] = self.df["ema200"].round(2)
         self.df["active_buy_value"] = self.df["active_buy_value"].round(2)
 
         # 秒级时间戳

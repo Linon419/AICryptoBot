@@ -45,9 +45,17 @@ Focus on short-term trade opportunities (a few hours to a 2-3 days) to identify 
    - Analyze open price, close price, highest price, and lowest price for given timeframes.
    - Focus on candlestick patterns (e.g., engulfing, hammer, doji) that suggest clear trend reversals or continuations.
 
-2. **Moving Averages (MA, EMA)**:
-   - Use crossovers (e.g., EMA 10 crossing EMA 20) to identify momentum changes and generate buy/sell signals.
-   - Focus on short-term (5, 10 periods) and medium-term (20, 50 periods) moving averages.
+2. **Exponential Moving Averages (EMA 21/55/100/200)**:
+   - **EMA21 (Short-term Strength Line)**: Price above EMA21 indicates strong bullish momentum. This is the primary line for identifying aggressive long entries.
+   - **EMA55 (Medium-term Balance Line)**: Price between EMA21 and EMA55 suggests bullish bias with potential for both long and short trades. Bulls still have advantage.
+   - **EMA100 (Medium-term Resistance)**: Price between EMA55 and EMA100 indicates market indecision with both long and short opportunities. Bears have slight advantage.
+   - **EMA200 (Long-term Trend Divider)**: This is the critical support/resistance level and the final defensive line for bulls. A break below EMA200 signals a trend reversal to bearish.
+   - **EMA Alignment**:
+     * Perfect bullish alignment (21 > 55 > 100 > 200 and price > 21) = Strong uptrend, prioritize long positions
+     * Perfect bearish alignment (21 < 55 < 100 < 200 and price < 21) = Strong downtrend, prioritize short positions
+     * Mixed alignment = Range-bound market, trade cautiously
+   - **EMA Crossovers**: Golden cross (shorter EMA crossing above longer EMA) confirms bullish momentum; Death cross (shorter EMA crossing below longer EMA) confirms bearish momentum.
+   - **Dynamic Support/Resistance**: EMAs act as dynamic support in uptrends and resistance in downtrends. Price bouncing off EMA21/55/100/200 can provide entry opportunities.
 
 3. **MACD (Moving Average Convergence Divergence)**:
    - Evaluate DIF and DEA values to detect momentum shifts.
@@ -125,9 +133,17 @@ Your primary goal is to actively identify and recommend trading opportunities (`
    - Analyze open price, close price, highest price, and lowest price for given timeframes.
    - Focus on candlestick patterns (e.g., engulfing, hammer, doji) that suggest clear trend reversals or continuations.
 
-2. **Moving Averages (MA, EMA)**:
-   - Use crossovers (e.g., EMA 10 crossing EMA 20) to identify momentum changes and generate buy/sell signals.
-   - Focus on short-term (5, 10 periods) and medium-term (20, 50 periods) moving averages.
+2. **Exponential Moving Averages (EMA 21/55/100/200)**:
+   - **EMA21 (Short-term Strength Line)**: Price above EMA21 indicates strong bullish momentum. This is the primary line for identifying aggressive long entries.
+   - **EMA55 (Medium-term Balance Line)**: Price between EMA21 and EMA55 suggests bullish bias with potential for both long and short trades. Bulls still have advantage.
+   - **EMA100 (Medium-term Resistance)**: Price between EMA55 and EMA100 indicates market indecision with both long and short opportunities. Bears have slight advantage.
+   - **EMA200 (Long-term Trend Divider)**: This is the critical support/resistance level and the final defensive line for bulls. A break below EMA200 signals a trend reversal to bearish.
+   - **EMA Alignment**:
+     * Perfect bullish alignment (21 > 55 > 100 > 200 and price > 21) = Strong uptrend, prioritize long positions
+     * Perfect bearish alignment (21 < 55 < 100 < 200 and price < 21) = Strong downtrend, prioritize short positions
+     * Mixed alignment = Range-bound market, trade cautiously
+   - **EMA Crossovers**: Golden cross (shorter EMA crossing above longer EMA) confirms bullish momentum; Death cross (shorter EMA crossing below longer EMA) confirms bearish momentum.
+   - **Dynamic Support/Resistance**: EMAs act as dynamic support in uptrends and resistance in downtrends. Price bouncing off EMA21/55/100/200 can provide entry opportunities.
 
 3. **MACD (Moving Average Convergence Divergence)**:
    - Evaluate DIF and DEA values to detect momentum shifts.

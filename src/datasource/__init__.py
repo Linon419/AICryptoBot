@@ -48,17 +48,19 @@ class DataSource(ABC):
         # sma25 = talib.SMA(self.df["close"], timeperiod=25)
         # sma99 = talib.SMA(self.df["close"], timeperiod=99)
 
-        ema7 = talib.EMA(self.df["close"], timeperiod=7)
-        ema25 = talib.EMA(self.df["close"], timeperiod=25)
-        ema99 = talib.EMA(self.df["close"], timeperiod=99)
+        ema21 = talib.EMA(self.df["close"], timeperiod=21)
+        ema55 = talib.EMA(self.df["close"], timeperiod=55)
+        ema100 = talib.EMA(self.df["close"], timeperiod=100)
+        ema200 = talib.EMA(self.df["close"], timeperiod=200)
 
         # self.df["sma7"] = sma7
         # self.df["sma25"] = sma25
         # self.df["sma99"] = sma99
 
-        self.df["ema7"] = ema7
-        self.df["ema25"] = ema25
-        self.df["ema99"] = ema99
+        self.df["ema21"] = ema21
+        self.df["ema55"] = ema55
+        self.df["ema100"] = ema100
+        self.df["ema200"] = ema200
 
     @abstractmethod
     def _candlestick(self):
