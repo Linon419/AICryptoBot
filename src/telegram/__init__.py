@@ -196,13 +196,7 @@ class TelegramBot:
                            message.chat.id, message.from_user.id, symbol, mode)
                 result = analyzer(symbol)
 
-                # 根据模式生成不同的链接
-                if symbol.endswith("USDT"):
-                    link = f"https://www.binance.com/zh-CN/futures/{symbol}"
-                else:
-                    link = f"https://finance.yahoo.com/quote/{symbol}"
-
-                text = f"{result}\n\n查看详情: {link}\n\n开源：https://github.com/BennyThink/AICryptoBot"
+                text = f"{result}"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):
