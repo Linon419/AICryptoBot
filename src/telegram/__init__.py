@@ -61,6 +61,7 @@ class TelegramBot:
         self.bot = telebot.TeleBot(token=os.getenv("BOT_TOKEN"))
         self.subscription_manager = SubscriptionManager()
         self.monitor = None  # Will be initialized in run()
+        self._setup_commands()
 
     def check(self, message: Message):
         users_str = os.getenv("BOT_ALLOW_USER", "")
@@ -77,6 +78,24 @@ class TelegramBot:
 
     def send_message(self, message: str):
         self.bot.send_message(chat_id=os.getenv("CHAT_ID"), text=message)
+
+    def _setup_commands(self):
+        """设置Bot命令菜单"""
+        from telebot.types import BotCommand
+
+        commands = [
+            BotCommand("start", "显示帮助信息"),
+            BotCommand("crypto", "查询加密货币 (例: /crypto BTC)"),
+            BotCommand("stock", "查询股票 (例: /stock AAPL)"),
+            BotCommand("subscribe", "订阅EMA排列通知"),
+            BotCommand("unsubscribe", "取消订阅"),
+            BotCommand("list", "查看订阅列表"),
+        ]
+        try:
+            self.bot.set_my_commands(commands)
+            logging.info("Bot commands menu setup successfully")
+        except Exception as e:
+            logging.warning("Failed to setup bot commands: %s", e)
 
     def __register_handlers(self):
         @self.bot.message_handler(commands=["start"])
