@@ -42,9 +42,13 @@ class GPT(LLM):
     )
     def __create(self, messages) -> dict:
         # 请求失败，或者没有返回正确的格式
-        completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
-        content = completion.choices[0].message.content.replace("\n", "")
-        return loads(content, Allow.ALL)
+        try:
+            completion = self.client.chat.completions.create(model=self.model, temperature=0.1, messages=messages)
+            content = completion.choices[0].message.content.replace("\n", "")
+            return loads(content, Allow.ALL)
+        except Exception as e:
+            logging.error("LLM API error: %s", str(e))
+            raise
 
     def send(self, symbol: str, indicators: dict) -> TradingAction:
         logging.info("发送数据给 %s %s，分析%s", self.client, self.model, symbol)

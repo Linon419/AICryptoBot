@@ -75,6 +75,12 @@ class BinanceAPI(DataSource):
         self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count"], inplace=True)
         self.df.dropna(inplace=True)
         logging.info("DataFrame shape after dropna for %s %s: %s", self.__symbol, self.__interval, self.df.shape)
+
+        # Only keep the last 'count' rows to avoid sending too much data to LLM
+        if len(self.df) > self.__count:
+            self.df = self.df.tail(self.__count)
+            logging.debug("Trimmed DataFrame to last %d rows for %s %s", self.__count, self.__symbol, self.__interval)
+
         # 转换数据格式 rsi保留整数，macd boll ema active_buy_value 保留两位小数
         self.df["rsi6"] = self.df["rsi6"].astype(int)
         self.df["rsi12"] = self.df["rsi12"].astype(int)
