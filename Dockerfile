@@ -10,13 +10,13 @@ RUN cd /tmp && \
     ./configure --prefix=/usr && \
     make && make install
 
-RUN pip3 install pdm==2.20.1
-COPY pyproject.toml pdm.lock ./
-RUN pdm install --no-lock
+COPY requirements.txt ./
+RUN pip3 install --no-cache-dir "numpy<2.0" && \
+    pip3 install --no-cache-dir -r requirements.txt
 
 FROM python:3.12-slim AS runner
 WORKDIR /app
-COPY --from=pybuilder /build/.venv/lib/ /usr/local/lib/
+COPY --from=pybuilder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=pybuilder /usr/lib/libta_lib* /usr/lib/
 COPY src /app
 
