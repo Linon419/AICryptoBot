@@ -12,6 +12,49 @@ from monitor import EMAMonitor
 from subscription_manager import SubscriptionManager
 
 
+def parse_user_input(text: str) -> tuple[str, list]:
+    """
+    解析用户输入，支持加密货币和股票查询
+
+    Examples:
+        "BTC" -> ("crypto", ["BTCUSDT"])
+        "/crypto BTC ETH" -> ("crypto", ["BTCUSDT", "ETHUSDT"])
+        "/stock AAPL" -> ("stock", ["AAPL"])
+
+    Args:
+        text: 用户输入的文本
+
+    Returns:
+        (mode, symbols) - mode为"crypto"或"stock"，symbols为交易对列表
+    """
+    text = text.strip()
+
+    # 检查是否有命令前缀
+    if text.startswith("/crypto"):
+        mode = "crypto"
+        symbols_str = text.replace("/crypto", "", 1).strip()
+    elif text.startswith("/stock"):
+        mode = "stock"
+        symbols_str = text.replace("/stock", "", 1).strip()
+    else:
+        # 默认为加密货币
+        mode = "crypto"
+        symbols_str = text
+
+    # 解析交易对（支持逗号或空格分隔）
+    symbols = []
+    for s in symbols_str.replace(",", " ").split():
+        s = s.strip().upper()
+        if s:
+            # 如果是加密货币模式且没有USDT后缀，自动添加
+            if mode == "crypto" and not s.endswith("USDT"):
+                symbols.append(f"{s}USDT")
+            else:
+                symbols.append(s)
+
+    return mode, symbols
+
+
 class TelegramBot:
 
     def __init__(self):
@@ -41,14 +84,18 @@ class TelegramBot:
             self.bot.send_chat_action(message.chat.id, "typing")
             help_text = """欢迎使用 AICryptoBot！
 
-命令列表：
-/start - 显示此帮助信息
-/query - 分析交易对（如 /query BTCUSDT）
-/subscribe - 订阅交易对的EMA排列通知（如 /subscribe BTCUSDT）
-/unsubscribe - 取消订阅（如 /unsubscribe BTCUSDT）
-/list - 查看我的订阅列表
+📊 查询命令：
+• 直接发送 BTC → 自动分析 BTCUSDT
+• 多个币种：BTC ETH SOL
+• /crypto BTC → 明确查询加密货币
+• /stock AAPL → 查询股票
 
-直接发送交易对（如BTCUSDT）也可以获取建议，多个交易对请用半角逗号隔开。"""
+🔔 订阅命令：
+/subscribe BTCUSDT - 订阅EMA排列通知
+/unsubscribe BTCUSDT - 取消订阅
+/list - 查看订阅列表
+
+💡 提示：默认查询加密货币，股票请使用 /stock 命令"""
             self.bot.reply_to(message, help_text)
 
         @self.bot.message_handler(commands=["subscribe"])
@@ -102,20 +149,60 @@ class TelegramBot:
         def group_query(message: Message):
             private_query(message)
 
-        @self.bot.message_handler(func=lambda message: self.check(message))
-        def private_query(message: Message):
-            user_input = message.text.split()[-1].strip()
-            if "/query@" in user_input:
-                self.bot.reply_to(message, "请提供交易对，如 `/query@burn_cryptobot btcusdt`", parse_mode="markdown")
+        @self.bot.message_handler(commands=["crypto"])
+        def crypto_handler(message: Message):
+            if not self.check(message):
                 return
 
-            pairs = user_input.split(",")
-            for pair in pairs:
+            parts = message.text.split(maxsplit=1)
+            if len(parts) < 2:
+                self.bot.reply_to(message, "请提供币种，如 /crypto BTC ETH")
+                return
+
+            mode, symbols = parse_user_input(message.text)
+            query_symbols(message, symbols, mode)
+
+        @self.bot.message_handler(commands=["stock"])
+        def stock_handler(message: Message):
+            if not self.check(message):
+                return
+
+            parts = message.text.split(maxsplit=1)
+            if len(parts) < 2:
+                self.bot.reply_to(message, "请提供股票代码，如 /stock AAPL MSFT")
+                return
+
+            mode, symbols = parse_user_input(message.text)
+            query_symbols(message, symbols, mode)
+
+        @self.bot.message_handler(func=lambda message: self.check(message))
+        def private_query(message: Message):
+            user_input = message.text.strip()
+
+            # 解析用户输入
+            mode, symbols = parse_user_input(user_input)
+
+            if not symbols:
+                self.bot.reply_to(message, "请提供交易对，例如：\n• BTC\n• BTC ETH\n• /stock AAPL")
+                return
+
+            query_symbols(message, symbols, mode)
+
+        def query_symbols(message: Message, symbols: list, mode: str):
+            """查询多个交易对的分析结果"""
+            for symbol in symbols:
                 self.bot.send_chat_action(message.chat.id, "typing")
-                pair = pair.upper()
-                logging.info("%s@%s分析交易：%s...", message.chat.id, message.from_user.id, pair)
-                result = analyzer(pair)
-                text = f"{result}\nhttps://www.binance.com/zh-CN/futures/{pair}\n\n开源：https://github.com/BennyThink/AICryptoBot"
+                logging.info("%s@%s分析交易：%s (mode=%s)",
+                           message.chat.id, message.from_user.id, symbol, mode)
+                result = analyzer(symbol)
+
+                # 根据模式生成不同的链接
+                if symbol.endswith("USDT"):
+                    link = f"https://www.binance.com/zh-CN/futures/{symbol}"
+                else:
+                    link = f"https://finance.yahoo.com/quote/{symbol}"
+
+                text = f"{result}\n\n查看详情: {link}\n\n开源：https://github.com/BennyThink/AICryptoBot"
                 self.bot.reply_to(message, text, disable_web_page_preview=True)
 
     def run(self):
