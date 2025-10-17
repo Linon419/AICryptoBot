@@ -26,7 +26,9 @@ class BinanceAPI(DataSource):
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
+        logging.debug("Fetching %s klines for %s, interval=%s, limit=%d", self.__symbol, self.__symbol, self.__interval, 100 + self.__count)
         candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=100 + self.__count)
+        logging.debug("Got %d candles for %s", len(candles) if candles else 0, self.__symbol)
         columns = [
             "open_time",
             "open",
@@ -62,6 +64,7 @@ class BinanceAPI(DataSource):
 
     def get_all_indicators(self) -> str:
         logging.debug("获取 %s %s的技术指标中....", self.__symbol, self.__interval)
+        logging.debug("DataFrame shape before indicators: %s", self.df.shape)
         self._boll()
         self._rsi()
         self._macd()
@@ -69,6 +72,7 @@ class BinanceAPI(DataSource):
         self._ma()
         self.df.drop(columns=["ignore", "close_time", "transaction_value", "transaction_count"], inplace=True)
         self.df.dropna(inplace=True)
+        logging.info("DataFrame shape after dropna for %s %s: %s", self.__symbol, self.__interval, self.df.shape)
         # 转换数据格式 rsi保留整数，macd boll ema active_buy_value 保留两位小数
         self.df["rsi6"] = self.df["rsi6"].astype(int)
         self.df["rsi12"] = self.df["rsi12"].astype(int)

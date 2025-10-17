@@ -61,6 +61,11 @@ class GPT(LLM):
             ]
         for name, value in indicators.items():
             messages.append({"role": "user", "content": f"interval: {name}, data: {value}"})
+
+        # Debug: log total message size
+        total_chars = sum(len(str(m.get("content", ""))) for m in messages)
+        logging.debug("Total prompt size: %d characters, %d messages", total_chars, len(messages))
+
         try:
             return self.__create(messages)
         except Exception as e:
