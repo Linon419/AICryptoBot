@@ -20,14 +20,17 @@ class TelegramBot:
         self.monitor = None  # Will be initialized in run()
 
     def check(self, message: Message):
-        users = [int(i) for i in os.getenv("BOT_ALLOW_USER").split(",")]
-        groups = [int(i) for i in os.getenv("BOT_ALLOW_GROUP").split(",")]
+        users_str = os.getenv("BOT_ALLOW_USER", "")
+        groups_str = os.getenv("BOT_ALLOW_GROUP", "")
+
+        users = [int(i.strip()) for i in users_str.split(",") if i.strip()]
+        groups = [int(i.strip()) for i in groups_str.split(",") if i.strip()]
 
         if message.from_user.id in users:
             return True
         if message.chat.id in groups:
             return True
-        logging.warning("未授权用户")
+        logging.warning("未授权用户 %s", message.from_user.id)
 
     def send_message(self, message: str):
         self.bot.send_message(chat_id=os.getenv("CHAT_ID"), text=message)
