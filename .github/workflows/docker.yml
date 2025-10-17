@@ -17,9 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT }}
-          submodules: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -49,7 +46,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/bennythink/aicryptobot:latest
+            ghcr.io/${{ github.repository_owner }}/aicryptobot:latest
 
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
@@ -58,20 +55,3 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: ssh to server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: "root"
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/AICryptoBot
-            docker-compose pull
-            docker-compose up -d
-
-      - name: Notification to Telegram
-        env:
-          TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          curl "https://api.telegram.org/bot$TOKEN/sendMessage?chat_id=260260121&text=Upgraded"
