@@ -26,8 +26,10 @@ class BinanceAPI(DataSource):
 
     def _candlestick(self):
         # K线数据：开盘价、收盘价、最高价、最低价（最好包含多个时间段）
-        logging.debug("Fetching %s klines for %s, interval=%s, limit=%d", self.__symbol, self.__symbol, self.__interval, 100 + self.__count)
-        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=100 + self.__count)
+        # EMA200 needs at least 200 candles, so we fetch 200 + count to ensure enough data
+        limit = max(200 + self.__count, 300)  # At least 300 candles to ensure EMA200 can be calculated
+        logging.debug("Fetching %s klines for %s, interval=%s, limit=%d", self.__symbol, self.__symbol, self.__interval, limit)
+        candles = self.__um_client.klines(symbol=self.__symbol, interval=self.__interval, limit=limit)
         logging.debug("Got %d candles for %s", len(candles) if candles else 0, self.__symbol)
         columns = [
             "open_time",
