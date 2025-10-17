@@ -12,7 +12,7 @@ RUN cd /tmp && \
 
 RUN pip3 install pdm==2.20.1
 COPY pyproject.toml pdm.lock ./
-RUN pdm install
+RUN pdm install --no-lock
 
 FROM python:3.12-slim AS runner
 WORKDIR /app
