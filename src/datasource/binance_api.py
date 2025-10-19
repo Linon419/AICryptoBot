@@ -97,6 +97,14 @@ class BinanceAPI(DataSource):
         self.df["ema200"] = self.df["ema200"].round(2)
         self.df["active_buy_value"] = self.df["active_buy_value"].round(2)
 
+        # 价格数据（OHLCV）也保留两位小数，确保数据精度一致
+        self.df["open"] = self.df["open"].round(2)
+        self.df["high"] = self.df["high"].round(2)
+        self.df["low"] = self.df["low"].round(2)
+        self.df["close"] = self.df["close"].round(2)
+        self.df["volume"] = self.df["volume"].round(2)
+        self.df["active_buy_volume"] = self.df["active_buy_volume"].round(2)
+
         # 秒级时间戳
         return self.df.to_json(orient="records", date_format="epoch", date_unit="s")
 

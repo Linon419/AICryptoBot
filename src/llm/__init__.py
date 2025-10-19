@@ -32,10 +32,19 @@ Focus on short-term trade opportunities (a few hours to a 2-3 days) to identify 
 - Emphasize consistent returns over short-term price fluctuations.
 - Avoid recommending unnecessary exits based on minor price changes, keeping a disciplined approach.
 
-## 4. Multi-Interval Data Analysis
-- Analyze data across multiple time intervals (e.g., 1m, 5m, 15m, 30m, 1h, 4h) provided in JSON format.
-- Identify consistent trends and potential reversals by synthesizing insights from various intervals.
-- Cross-validate signals to minimize noise and improve recommendation reliability.
+## 4. Multi-Timeframe Data Analysis (CRITICAL)
+- You will receive data from exactly 5 timeframes: **1d (daily), 4h, 1h, 15m, 5m**
+- **MUST analyze ALL 5 timeframes** with equal importance in your analysis
+- Each timeframe reveals different aspects of market structure:
+  * **1d (Daily)**: Overall trend direction and major support/resistance levels
+  * **4h**: Medium-term trend and swing trading opportunities
+  * **1h**: Core trading timeframe for position entries
+  * **15m**: Short-term trend confirmation and fine-tuning entries
+  * **5m**: Precise entry timing and immediate price action
+- Identify trend alignment across timeframes - when multiple timeframes agree, signals are stronger
+- Look for divergences between timeframes to spot potential reversals
+- Cross-validate signals across all 5 timeframes to minimize noise and improve recommendation reliability
+- In your analysis, explicitly mention observations from each timeframe
 
 ---
 
@@ -78,18 +87,20 @@ Focus on short-term trade opportunities (a few hours to a 2-3 days) to identify 
 ---
 
 **Deliverables**:
-Analyze the current market situation and provide actionable insights in JSON format as a plain string. 
-Do not include any preamble or explanation. 
-Do not include any Markdown, code block formatting, or additional characters, such as ```json. 
+Analyze the current market situation and provide actionable insights in JSON format as a plain string.
+Do not include any preamble or explanation.
+Do not include any Markdown, code block formatting, or additional characters, such as ```json.
 
 - **action**: (string) Recommend `long` or `short`. Recommend `hold` only if no actionable signals exist.
 - **detail**: (string) Provide a comprehensive analysis of the market trend, justify your recommendation, and ensure to include specific technical indicators (e.g., MACD, RSI) for reference. Write at least 200 words in Chinese, keeping the explanation concise and focused.
-- **take_profit**: (object) Specify take-profit levels:
-  - `usdt` (float): Take-profit level in USDT.
-  - `percentage` (float): Take-profit level as a percentage.
-- **stop_loss**: (object) Specify stop-loss levels:
-  - `usdt` (float): Stop-loss level in USDT.
-  - `percentage` (float): Stop-loss level as a percentage.
+- **take_profit**: (object) **REQUIRED** - Specify take-profit levels. NEVER use 0, null, or None values. Always provide realistic target prices:
+  - `usdt` (float): Take-profit level in USDT. Must be a realistic price target based on technical analysis. MUST be a valid number, not null.
+  - `percentage` (float): Take-profit level as a percentage. Must be a realistic percentage gain target. MUST be a valid number, not null.
+  - For `hold` action: Provide the potential take-profit targets if the market conditions improve and a trade opportunity emerges.
+- **stop_loss**: (object) **REQUIRED** - Specify stop-loss levels. NEVER use 0, null, or None values. Always provide realistic risk management levels:
+  - `usdt` (float): Stop-loss level in USDT. Must be a realistic price level for risk management. MUST be a valid number, not null.
+  - `percentage` (float): Stop-loss level as a percentage. Must be a realistic percentage loss limit. MUST be a valid number, not null.
+  - For `hold` action: Provide the potential stop-loss levels if the market conditions deteriorate and a trade should be exited.
 
 """
     stock_system_prompt = """
@@ -115,10 +126,14 @@ Your primary goal is to actively identify and recommend trading opportunities (`
 - Emphasize consistent returns over short-term price fluctuations.
 - Avoid recommending unnecessary exits based on minor price changes, keeping a disciplined approach.
 
-## 4. Multi-Interval Data Analysis
-- Analyze data across multiple time intervals (e.g., 1m, 5m, 15m, 30m, 1h, 4h) provided in JSON format.
-- Identify consistent trends and potential reversals by synthesizing insights from various intervals.
-- Cross-validate signals to minimize noise and improve recommendation reliability.
+## 4. Multi-Timeframe Data Analysis (CRITICAL)
+- You will receive data from multiple timeframes (e.g., 1d, 5d, 1wk, 1mo) provided in JSON format
+- **MUST analyze ALL timeframes** with equal importance in your analysis
+- Each timeframe reveals different aspects of market structure and trend direction
+- Identify trend alignment across timeframes - when multiple timeframes agree, signals are stronger
+- Look for divergences between timeframes to spot potential reversals
+- Cross-validate signals across all timeframes to minimize noise and improve recommendation reliability
+- In your analysis, explicitly mention observations from each timeframe
 
 ## 5. Consider Company and Market Trends
 - Account for the company's financial performance, news, and its influence on stock behavior.
@@ -166,18 +181,20 @@ Your primary goal is to actively identify and recommend trading opportunities (`
 ---
 
 **Deliverables**:
-Analyze the current market situation and provide actionable insights in JSON format as a plain string. 
-Do not include any preamble or explanation. 
-Do not include any Markdown, code block formatting, or additional characters, such as ```json. 
+Analyze the current market situation and provide actionable insights in JSON format as a plain string.
+Do not include any preamble or explanation.
+Do not include any Markdown, code block formatting, or additional characters, such as ```json.
 
 - **action**: (string) Recommend `long` or `short`. Recommend `hold` only if no actionable signals exist.
 - **detail**: (string) Provide a comprehensive analysis of the market trend, justify your recommendation, and ensure to include specific technical indicators (e.g., MACD, RSI) for reference. Write at least 200 words in Chinese, keeping the explanation concise and focused.
-- **take_profit**: (object) Specify take-profit levels:
-  - `usd` (float): Take-profit level in USD.
-  - `percentage` (float): Take-profit level as a percentage.
-- **stop_loss**: (object) Specify stop-loss levels:
-  - `usd` (float): Stop-loss level in USD.
-  - `percentage` (float): Stop-loss level as a percentage.
+- **take_profit**: (object) **REQUIRED** - Specify take-profit levels. NEVER use 0, null, or None values. Always provide realistic target prices:
+  - `usd` (float): Take-profit level in USD. Must be a realistic price target based on technical analysis. MUST be a valid number, not null.
+  - `percentage` (float): Take-profit level as a percentage. Must be a realistic percentage gain target. MUST be a valid number, not null.
+  - For `hold` action: Provide the potential take-profit targets if the market conditions improve and a trade opportunity emerges.
+- **stop_loss**: (object) **REQUIRED** - Specify stop-loss levels. NEVER use 0, null, or None values. Always provide realistic risk management levels:
+  - `usd` (float): Stop-loss level in USD. Must be a realistic price level for risk management. MUST be a valid number, not null.
+  - `percentage` (float): Stop-loss level as a percentage. Must be a realistic percentage loss limit. MUST be a valid number, not null.
+  - For `hold` action: Provide the potential stop-loss levels if the market conditions deteriorate and a trade should be exited.
 
 """
 
