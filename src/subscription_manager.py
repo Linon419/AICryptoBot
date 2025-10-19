@@ -14,7 +14,21 @@ class SubscriptionManager:
 
     def __init__(self, data_file: str = None):
         if data_file is None:
+            # 获取配置的文件路径，默认为项目根目录下的 data/subscriptions.json
             data_file = os.getenv("SUBSCRIPTION_FILE", "subscriptions.json")
+
+            # 如果是相对路径，转换为基于项目根目录的绝对路径
+            if not os.path.isabs(data_file):
+                # 获取项目根目录（src 目录的父目录）
+                project_root = Path(__file__).parent.parent
+                # 如果路径不包含目录分隔符，默认存储在 data 目录下
+                if os.sep not in data_file and "/" not in data_file:
+                    data_dir = project_root / "data"
+                    data_dir.mkdir(exist_ok=True)  # 确保 data 目录存在
+                    data_file = data_dir / data_file
+                else:
+                    data_file = project_root / data_file
+
         self.data_file = Path(data_file)
         self.subscriptions: Dict[int, Set[str]] = {}
         self._load()

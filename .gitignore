@@ -169,3 +169,7 @@ cython_debug/
 /.idea/vcs.xml
 /.idea/AICryptoBot.iml
 /src/output/*
+
+# Data directory - ignore user data but keep directory structure
+/data/*
+!/data/.gitkeep
